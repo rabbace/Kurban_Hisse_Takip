@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurban Hisse Takip — Ekran Önizlemeleri</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {} }
+  }
+</script>
+<style>
+  .screen { border: 2px solid #e5e7eb; border-radius: 16px; overflow: hidden; background: #f9fafb; }
+  .screen-label { background: #1e293b; color: #94a3b8; font-size: 11px; font-family: monospace; padding: 6px 12px; letter-spacing: 0.05em; }
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  .badge { display: inline-flex; align-items: center; border-radius: 9999px; padding: 2px 10px; font-size: 12px; font-weight: 500; }
+  .step-done { color: #10b981; }
+  .step-current { color: #059669; font-weight: 600; }
+  .step-future { color: #d1d5db; }
+  @media (max-width: 768px) { .grid-screens { grid-template-columns: 1fr !important; } }
+</style>
+</head>
+<body class="bg-slate-100 p-6 min-h-screen">
+
+<div class="max-w-7xl mx-auto space-y-10">
+
+  <div class="text-center py-8">
+    <h1 class="text-3xl font-black text-slate-800">🐑 Kurban Hisse Takip</h1>
+    <p class="text-slate-500 mt-2">Uygulama Ekran Önizlemeleri — Next.js + Supabase</p>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 1: ANA SAYFA
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/ — ANA SAYFA (Müşteri)</div>
+    <div class="bg-white min-h-screen">
+
+      <!-- Navbar -->
+      <header class="border-b border-gray-200 bg-white py-3 px-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🐑</span>
+          <div>
+            <p class="text-sm font-bold leading-tight text-emerald-700">Kurban</p>
+            <p class="text-xs font-medium leading-tight text-gray-500">Hisse Takip</p>
+          </div>
+        </div>
+        <nav class="flex items-center gap-1">
+          <a class="rounded-lg px-4 py-2 text-sm font-medium bg-emerald-50 text-emerald-700">Hayvanlar</a>
+          <a class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600">Sipariş Takip</a>
+          <button class="ml-2 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white">🔍 Sipariş Sorgula</button>
+        </nav>
+      </header>
+
+      <!-- Hero -->
+      <section class="bg-gradient-to-br from-emerald-700 to-emerald-900 py-12 text-white text-center">
+        <p class="text-sm font-medium uppercase tracking-widest text-emerald-300 mb-2">Kurban Bayramı 2025</p>
+        <h1 class="text-3xl font-extrabold">Kurbanlık Hayvan ve Hisse Satışı</h1>
+        <p class="text-emerald-200 mt-2 max-w-xl mx-auto text-sm">Güvenli, şeffaf ve kolay. Online sipariş verin, randevu alın, kesim sürecini anlık takip edin.</p>
+        <div class="mt-5 flex flex-wrap justify-center gap-6 text-sm">
+          <span>✅ Sağlık sertifikalı hayvanlar</span>
+          <span>📍 Adrese teslim seçeneği</span>
+          <span>📱 Anlık takip sistemi</span>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="border-b border-gray-200 bg-white py-3 px-4 flex items-center justify-between">
+        <div class="flex gap-2">
+          <button class="rounded-full px-4 py-1.5 text-sm font-medium bg-emerald-600 text-white">Tümü</button>
+          <button class="rounded-full px-4 py-1.5 text-sm font-medium bg-gray-100 text-gray-600">Koyun</button>
+          <button class="rounded-full px-4 py-1.5 text-sm font-medium bg-gray-100 text-gray-600">Keçi</button>
+          <button class="rounded-full px-4 py-1.5 text-sm font-medium bg-gray-100 text-gray-600">Dana/İnek</button>
+          <button class="rounded-full px-4 py-1.5 text-sm font-medium bg-gray-100 text-gray-600">Deve</button>
+        </div>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+          <input class="border border-gray-300 rounded-xl pl-8 pr-4 py-2 text-xs w-44" placeholder="Hayvan ara...">
+        </div>
+      </section>
+
+      <!-- Grid -->
+      <main class="p-6">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+          <!-- Card 1: Dana -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all">
+            <div class="-mx-5 -mt-5 mb-4 flex items-center justify-center bg-gradient-to-br from-emerald-50 to-teal-50 py-8">
+              <span class="text-6xl">🐄</span>
+            </div>
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Dana/İnek</p>
+                <h3 class="mt-0.5 text-base font-bold text-gray-900">Büyük Dana 1</h3>
+              </div>
+              <span class="badge bg-emerald-100 text-emerald-700">7 hisse kaldı</span>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">Sağlıklı, besili Simental dana. Toplam 7 hisse.</p>
+            <div class="mt-3 space-y-1.5">
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">⚖️ 380 kg</div>
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">👥 7 hisse · <span class="font-medium text-emerald-700">7 mevcut</span></div>
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">📅 Kesim: 6 Haziran 2025</div>
+            </div>
+            <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
+              <div>
+                <p class="text-xs text-gray-500">Hisse başına</p>
+                <p class="text-lg font-bold text-emerald-700">₺8.500</p>
+              </div>
+              <button class="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">Hisse Al →</button>
+            </div>
+          </div>
+
+          <!-- Card 2: Koyun -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="-mx-5 -mt-5 mb-4 flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50 py-8">
+              <span class="text-6xl">🐑</span>
+            </div>
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Koyun</p>
+                <h3 class="mt-0.5 text-base font-bold text-gray-900">Koyun 1</h3>
+              </div>
+              <span class="badge bg-green-100 text-green-700">Mevcut</span>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">Akkaraman cinsi, 2 yaşında.</p>
+            <div class="mt-3 space-y-1.5">
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">⚖️ 55 kg</div>
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">📅 Kesim: 6 Haziran 2025</div>
+            </div>
+            <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
+              <div>
+                <p class="text-xs text-gray-500">Fiyat</p>
+                <p class="text-lg font-bold text-emerald-700">₺12.000</p>
+              </div>
+              <button class="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">Satın Al →</button>
+            </div>
+          </div>
+
+          <!-- Card 3: Deve -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="-mx-5 -mt-5 mb-4 flex items-center justify-center bg-gradient-to-br from-yellow-50 to-amber-50 py-8">
+              <span class="text-6xl">🐪</span>
+            </div>
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Deve</p>
+                <h3 class="mt-0.5 text-base font-bold text-gray-900">Deve (Hisse)</h3>
+              </div>
+              <span class="badge bg-emerald-100 text-emerald-700">7 hisse kaldı</span>
+            </div>
+            <p class="mt-2 text-xs text-gray-500">Türk devesi, 5 yaşında olgun. 7 hisse.</p>
+            <div class="mt-3 space-y-1.5">
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">⚖️ 650 kg</div>
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">👥 7 hisse · <span class="font-medium text-emerald-700">7 mevcut</span></div>
+              <div class="flex items-center gap-1.5 text-xs text-gray-600">📅 Kesim: 8 Haziran 2025</div>
+            </div>
+            <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
+              <div>
+                <p class="text-xs text-gray-500">Hisse başına</p>
+                <p class="text-lg font-bold text-emerald-700">₺18.000</p>
+              </div>
+              <button class="inline-flex items-center gap-1 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white">Hisse Al →</button>
+            </div>
+          </div>
+
+          <!-- Card 4: Tükendi -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 opacity-60">
+            <div class="-mx-5 -mt-5 mb-4 flex items-center justify-center bg-gradient-to-br from-lime-50 to-green-50 py-8">
+              <span class="text-6xl">🐐</span>
+            </div>
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Keçi</p>
+                <h3 class="mt-0.5 text-base font-bold text-gray-900">Keçi 2</h3>
+              </div>
+              <span class="badge bg-red-100 text-red-700">Tükendi</span>
+            </div>
+            <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
+              <div>
+                <p class="text-xs text-gray-500">Fiyat</p>
+                <p class="text-lg font-bold text-gray-400">₺9.500</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 2: SİPARİŞ FORMU
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/siparis?animal_id=... — SİPARİŞ FORMU</div>
+    <div class="bg-gray-50 min-h-screen">
+      <header class="border-b border-gray-200 bg-white py-3 px-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🐑</span>
+          <div><p class="text-sm font-bold text-emerald-700">Kurban</p><p class="text-xs text-gray-500">Hisse Takip</p></div>
+        </div>
+      </header>
+
+      <main class="max-w-2xl mx-auto px-4 py-8">
+        <a class="mb-6 inline-flex items-center gap-1 text-sm text-gray-500">← Geri Dön</a>
+
+        <!-- Animal Summary -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
+          <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Dana/İnek</p>
+          <h2 class="mt-1 text-xl font-bold">Büyük Dana 1</h2>
+          <div class="mt-3 flex flex-wrap gap-4 text-sm text-gray-600">
+            <span>⚖️ 380 kg</span>
+            <span>📅 Kesim: 6 Haziran 2025</span>
+            <span>🟢 7 hisse mevcut</span>
+          </div>
+          <!-- Hisse seçici -->
+          <div class="mt-4">
+            <label class="text-sm font-medium text-gray-700">Hisse Sayısı</label>
+            <div class="mt-2 flex items-center gap-3">
+              <button class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-lg font-bold">-</button>
+              <span class="w-8 text-center text-lg font-bold">1</span>
+              <button class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-lg font-bold">+</button>
+              <span class="text-sm text-gray-500">(max 7)</span>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
+            <p class="text-sm text-gray-500">Toplam Tutar</p>
+            <p class="text-2xl font-extrabold text-emerald-700">₺8.500</p>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 space-y-4">
+          <h3 class="text-base font-bold text-gray-900">Kişisel Bilgiler</h3>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700">Ad Soyad <span class="text-red-500">*</span></label>
+              <input class="block w-full rounded-xl border border-emerald-500 ring-2 ring-emerald-500/20 bg-white px-4 py-2.5 text-sm" value="Ahmet Yılmaz" readonly>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700">Telefon <span class="text-red-500">*</span></label>
+              <input class="block w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm" value="0532 000 00 00" readonly>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700">E-posta</label>
+              <input class="block w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm" placeholder="ornek@email.com" readonly>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700">TC Kimlik No</label>
+              <input class="block w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm" placeholder="11 haneli TC No" readonly>
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700">Adres</label>
+            <textarea class="block w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm" rows="2" placeholder="Mahalle, Cadde, Sokak..." readonly></textarea>
+          </div>
+
+          <div class="border-t border-gray-100 pt-4">
+            <h3 class="mb-3 text-base font-bold text-gray-900">Teslimat Tercihi</h3>
+            <div class="space-y-2">
+              <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-gray-200 p-3">
+                <input type="radio" name="d" class="accent-emerald-600"> <span class="text-sm font-medium text-gray-700">Yerinde Kesim (Adreste)</span>
+              </label>
+              <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-emerald-500 bg-emerald-50 p-3">
+                <input type="radio" name="d" checked class="accent-emerald-600"> <span class="text-sm font-medium text-gray-700">Paket Et (Kestikten Sonra Al)</span>
+              </label>
+              <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-gray-200 p-3">
+                <input type="radio" name="d" class="accent-emerald-600"> <span class="text-sm font-medium text-gray-700">Üzerime Bırak (Firmada Kal)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-100 pt-4">
+            <label class="mb-1 block text-sm font-medium text-gray-700">Tercih Ettiğiniz Kesim Tarihi / Saati</label>
+            <input type="datetime-local" class="block w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm" readonly>
+          </div>
+
+          <button class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white">
+            Siparişi Tamamla · ₺8.500
+          </button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 3: ONAY & TAKİP KODU
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/siparis — SİPARİŞ ONAY (Takip Kodu)</div>
+    <div class="bg-gray-50 min-h-96 flex flex-col">
+      <header class="border-b border-gray-200 bg-white py-3 px-4 flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-2xl">🐑</span><div><p class="text-sm font-bold text-emerald-700">Kurban</p></div></div>
+      </header>
+      <main class="flex-1 flex items-center justify-center">
+        <div class="max-w-md w-full mx-auto px-4 py-16 text-center">
+          <div class="text-6xl mb-4">✅</div>
+          <h1 class="text-2xl font-bold text-gray-900">Siparişiniz Alındı!</h1>
+          <p class="mt-2 text-gray-600 text-sm">Takip kodunuzu saklayın. Bu kod ile siparişinizi takip edebilirsiniz.</p>
+          <div class="mt-6 rounded-2xl bg-emerald-50 p-6">
+            <p class="text-sm text-emerald-700">Takip Kodunuz</p>
+            <p class="mt-1 text-3xl font-black tracking-widest text-emerald-900">KRB-AB3D7XYZ</p>
+            <button class="mt-3 inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2 text-xs font-semibold text-gray-700">📋 Kopyala</button>
+          </div>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <button class="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white">Siparişimi Takip Et</button>
+            <button class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700">Ana Sayfa</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 4: TAKİP SAYFASI
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/takip/KRB-AB3D7XYZ — KESİM DURUM TAKİBİ</div>
+    <div class="bg-gray-50 min-h-screen">
+      <header class="border-b border-gray-200 bg-white py-3 px-4 flex items-center justify-between">
+        <div class="flex items-center gap-2"><span class="text-2xl">🐑</span><div><p class="text-sm font-bold text-emerald-700">Kurban</p></div></div>
+      </header>
+
+      <main class="max-w-2xl mx-auto px-4 py-8">
+        <!-- Header card -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4 flex items-start justify-between">
+          <div>
+            <p class="text-xs text-gray-500">Takip Kodu</p>
+            <p class="text-xl font-black tracking-widest text-emerald-700">KRB-AB3D7XYZ</p>
+            <p class="mt-1 text-xs text-gray-400">Sipariş Tarihi: 5 Haziran 2025 14:32</p>
+          </div>
+          <span class="badge bg-orange-100 text-orange-800">Kesim Başladı</span>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+          <h3 class="mb-4 text-sm font-semibold text-gray-700">Kesim Süreci</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <span class="text-emerald-500">✅</span>
+              <span class="text-sm font-medium text-gray-700">Beklemede</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-emerald-500">✅</span>
+              <span class="text-sm font-medium text-gray-700">Onaylandı</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-emerald-500">✅</span>
+              <div class="flex-1 flex items-center gap-2">
+                <span class="text-sm font-medium text-emerald-700">Kesim Başladı</span>
+                <span class="badge bg-emerald-100 text-emerald-700 text-xs animate-pulse">Şu an</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-gray-300">○</span>
+              <span class="text-sm font-medium text-gray-400">Kesildi</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-gray-300">○</span>
+              <span class="text-sm font-medium text-gray-400">Teslim Edildi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <h3 class="mb-3 text-sm font-semibold text-gray-700">Hayvan Bilgisi</h3>
+            <p class="font-medium text-gray-900">Büyük Dana 1</p>
+            <p class="text-sm text-gray-500">Dana/İnek · 380 kg</p>
+            <p class="text-sm text-gray-500">1 hisse</p>
+            <p class="text-sm text-gray-500">Kesim: 6 Haziran 2025</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <h3 class="mb-3 text-sm font-semibold text-gray-700">Sipariş Özeti</h3>
+            <div class="space-y-1.5 text-sm">
+              <div class="flex justify-between"><span class="text-gray-500">Tutar</span><span class="font-bold text-emerald-700">₺8.500</span></div>
+              <div class="flex justify-between"><span class="text-gray-500">Teslimat</span><span class="text-gray-700">Paket Et</span></div>
+              <div class="flex justify-between"><span class="text-gray-500">Randevu</span><span class="text-gray-700">6 Haz. 09:00</span></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 sm:col-span-2">
+            <h3 class="mb-3 text-sm font-semibold text-gray-700">İletişim</h3>
+            <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+              <span>📞 Ahmet Yılmaz · 0532 000 00 00</span>
+              <span>📍 Atatürk Mah. No:5, Fatih/İstanbul</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 5: ADMIN DASHBOARD
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/admin — ADMIN DASHBOARD</div>
+    <div class="flex h-auto min-h-96" style="min-height:600px">
+      <!-- Sidebar -->
+      <aside class="w-52 bg-emerald-800 flex flex-col shrink-0">
+        <div class="p-4 border-b border-emerald-700 flex items-center gap-2">
+          <span class="text-2xl">🐑</span>
+          <div><p class="text-sm font-bold text-white">Kurban Takip</p><p class="text-xs text-emerald-300">Admin Paneli</p></div>
+        </div>
+        <nav class="flex-1 p-3 space-y-1">
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium bg-white/10 text-white">📊 Dashboard</a>
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200 hover:bg-white/5">📋 Siparişler</a>
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200 hover:bg-white/5">🐾 Hayvanlar</a>
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200 hover:bg-white/5">✂️ Kesim Takvimi</a>
+        </nav>
+        <div class="p-3 border-t border-emerald-700">
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">🚪 Çıkış Yap</a>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main class="flex-1 bg-gray-50 p-6 space-y-6 overflow-auto">
+        <div>
+          <h1 class="text-xl font-bold text-gray-900">Dashboard</h1>
+          <p class="text-sm text-gray-500">Genel durum özeti</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="inline-flex rounded-xl p-2.5 bg-blue-50 text-blue-700">📦</div>
+            <p class="mt-3 text-2xl font-bold text-gray-900">42</p>
+            <p class="text-xs text-gray-500">Toplam Sipariş</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="inline-flex rounded-xl p-2.5 bg-yellow-50 text-yellow-700">⏳</div>
+            <p class="mt-3 text-2xl font-bold text-gray-900">8</p>
+            <p class="text-xs text-gray-500">Beklemede</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="inline-flex rounded-xl p-2.5 bg-purple-50 text-purple-700">✅</div>
+            <p class="mt-3 text-2xl font-bold text-gray-900">21</p>
+            <p class="text-xs text-gray-500">Kesildi</p>
+          </div>
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="inline-flex rounded-xl p-2.5 bg-green-50 text-green-700">🚚</div>
+            <p class="mt-3 text-2xl font-bold text-gray-900">13</p>
+            <p class="text-xs text-gray-500">Teslim Edildi</p>
+          </div>
+        </div>
+
+        <div class="grid gap-4 lg:grid-cols-2">
+          <!-- Today's Appointments -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <h2 class="mb-3 text-sm font-semibold text-gray-700">Bugünkü Randevular (3)</h2>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2.5">
+                <div><p class="text-sm font-medium text-gray-900">Ahmet Yılmaz</p><p class="text-xs text-gray-500">Büyük Dana 1 · 09:00</p></div>
+                <span class="badge bg-orange-100 text-orange-800">Kesim Başladı</span>
+              </div>
+              <div class="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2.5">
+                <div><p class="text-sm font-medium text-gray-900">Fatma Kaya</p><p class="text-xs text-gray-500">Koyun 1 · 11:00</p></div>
+                <span class="badge bg-blue-100 text-blue-800">Onaylandı</span>
+              </div>
+              <div class="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2.5">
+                <div><p class="text-sm font-medium text-gray-900">Mehmet Demir</p><p class="text-xs text-gray-500">Dana 2 · 14:00</p></div>
+                <span class="badge bg-yellow-100 text-yellow-800">Beklemede</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-sm font-semibold text-gray-700">Son Siparişler</h2>
+              <a class="text-xs text-emerald-600">Tümünü Gör →</a>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-sm">
+                <div><p class="font-medium text-gray-900">Ahmet Yılmaz</p><p class="text-xs text-gray-400">KRB-AB3D7XYZ</p></div>
+                <div class="text-right"><p class="font-semibold text-emerald-700">₺8.500</p><span class="badge bg-orange-100 text-orange-800">Kesim Başladı</span></div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <div><p class="font-medium text-gray-900">Fatma Kaya</p><p class="text-xs text-gray-400">KRB-CD5E8PQR</p></div>
+                <div class="text-right"><p class="font-semibold text-emerald-700">₺12.000</p><span class="badge bg-blue-100 text-blue-800">Onaylandı</span></div>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <div><p class="font-medium text-gray-900">Mehmet Demir</p><p class="text-xs text-gray-400">KRB-GH9K2MNO</p></div>
+                <div class="text-right"><p class="font-semibold text-emerald-700">₺17.000</p><span class="badge bg-green-100 text-green-800">Teslim Edildi</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 6: ADMIN SİPARİŞLER
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/admin/siparisler — SİPARİŞ YÖNETİMİ</div>
+    <div class="flex" style="min-height:500px">
+      <aside class="w-52 bg-emerald-800 flex flex-col shrink-0">
+        <div class="p-4 border-b border-emerald-700 flex items-center gap-2">
+          <span class="text-xl">🐑</span><div><p class="text-sm font-bold text-white">Kurban Takip</p></div>
+        </div>
+        <nav class="flex-1 p-3 space-y-1">
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">📊 Dashboard</a>
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium bg-white/10 text-white">📋 Siparişler</a>
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">🐾 Hayvanlar</a>
+          <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">✂️ Kesim Takvimi</a>
+        </nav>
+      </aside>
+      <main class="flex-1 bg-gray-50 p-6 overflow-auto">
+        <div class="flex items-center justify-between mb-4">
+          <div><h1 class="text-xl font-bold text-gray-900">Siparişler</h1><p class="text-sm text-gray-500">42 sipariş</p></div>
+          <button class="inline-flex items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-2 text-xs font-semibold text-gray-700">🔄 Yenile</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">Tümü</button>
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white">Beklemede</button>
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">Onaylandı</button>
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">Kesim Başladı</button>
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">Kesildi</button>
+          <button class="rounded-full px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600">Teslim Edildi</button>
+          <div class="ml-auto">
+            <input class="border border-gray-300 rounded-xl px-3 py-1.5 text-xs w-48" placeholder="🔍 Ad, telefon, takip kodu...">
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Takip Kodu</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Müşteri</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Hayvan</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Tutar</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Durum</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-xs font-bold text-emerald-700">KRB-AB3D7XYZ</td>
+                <td class="px-4 py-3"><p class="font-medium">Ahmet Yılmaz</p><p class="text-xs text-gray-400">0532 000 00 00</p></td>
+                <td class="px-4 py-3"><p>Büyük Dana 1</p><p class="text-xs text-gray-400">Dana · 1 hisse</p></td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺8.500</td>
+                <td class="px-4 py-3"><span class="badge bg-orange-100 text-orange-800">Kesim Başladı</span></td>
+                <td class="px-4 py-3"><button class="text-xs text-emerald-600 font-medium">Güncelle</button></td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-xs font-bold text-emerald-700">KRB-CD5E8PQR</td>
+                <td class="px-4 py-3"><p class="font-medium">Fatma Kaya</p><p class="text-xs text-gray-400">0533 000 00 00</p></td>
+                <td class="px-4 py-3"><p>Koyun 1</p><p class="text-xs text-gray-400">Koyun · 1 hisse</p></td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺12.000</td>
+                <td class="px-4 py-3"><span class="badge bg-yellow-100 text-yellow-800">Beklemede</span></td>
+                <td class="px-4 py-3"><button class="text-xs text-emerald-600 font-medium">Güncelle</button></td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-xs font-bold text-emerald-700">KRB-GH9K2MNO</td>
+                <td class="px-4 py-3"><p class="font-medium">Mehmet Demir</p><p class="text-xs text-gray-400">0534 000 00 00</p></td>
+                <td class="px-4 py-3"><p>Büyük Dana 2</p><p class="text-xs text-gray-400">Dana · 2 hisse</p></td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺17.000</td>
+                <td class="px-4 py-3"><span class="badge bg-green-100 text-green-800">Teslim Edildi</span></td>
+                <td class="px-4 py-3"><button class="text-xs text-emerald-600 font-medium">Güncelle</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EKRAN 7: ADMIN HAYVANLAR
+  ========================================================== -->
+  <div class="screen">
+    <div class="screen-label">/admin/hayvanlar — HAYVAN YÖNETİMİ</div>
+    <div class="flex" style="min-height:480px">
+      <aside class="w-52 bg-emerald-800 flex flex-col shrink-0 py-4 px-3">
+        <div class="mb-4 px-1 flex items-center gap-2"><span class="text-xl">🐑</span><p class="text-sm font-bold text-white">Admin Paneli</p></div>
+        <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">📊 Dashboard</a>
+        <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">📋 Siparişler</a>
+        <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium bg-white/10 text-white">🐾 Hayvanlar</a>
+        <a class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200">✂️ Kesim Takvimi</a>
+      </aside>
+      <main class="flex-1 bg-gray-50 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div><h1 class="text-xl font-bold text-gray-900">Hayvanlar</h1><p class="text-sm text-gray-500">8 hayvan</p></div>
+          <button class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white">+ Hayvan Ekle</button>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Adı</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Tür</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Ağırlık</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Hisse</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Fiyat/Hisse</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Kesim</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600">Durum</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-medium">Büyük Dana 1</td>
+                <td class="px-4 py-3 text-gray-600">Dana/İnek</td>
+                <td class="px-4 py-3 text-gray-600">380 kg</td>
+                <td class="px-4 py-3 text-xs font-semibold text-emerald-700">7/7</td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺8.500</td>
+                <td class="px-4 py-3 text-xs text-gray-500">6 Haz</td>
+                <td class="px-4 py-3"><span class="badge bg-green-100 text-green-700">Aktif</span></td>
+                <td class="px-4 py-3"><div class="flex gap-2"><button class="text-gray-400 hover:text-gray-600 p-1">✏️</button><button class="text-red-300 hover:text-red-500 p-1">🗑️</button></div></td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-medium">Büyük Dana 2</td>
+                <td class="px-4 py-3 text-gray-600">Dana/İnek</td>
+                <td class="px-4 py-3 text-gray-600">420 kg</td>
+                <td class="px-4 py-3 text-xs font-semibold text-emerald-700">5/7</td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺9.000</td>
+                <td class="px-4 py-3 text-xs text-gray-500">6 Haz</td>
+                <td class="px-4 py-3"><span class="badge bg-green-100 text-green-700">Aktif</span></td>
+                <td class="px-4 py-3"><div class="flex gap-2"><button class="p-1">✏️</button><button class="p-1">🗑️</button></div></td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-medium">Koyun 1</td>
+                <td class="px-4 py-3 text-gray-600">Koyun</td>
+                <td class="px-4 py-3 text-gray-600">55 kg</td>
+                <td class="px-4 py-3 text-xs font-semibold text-emerald-700">1/1</td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺12.000</td>
+                <td class="px-4 py-3 text-xs text-gray-500">6 Haz</td>
+                <td class="px-4 py-3"><span class="badge bg-green-100 text-green-700">Aktif</span></td>
+                <td class="px-4 py-3"><div class="flex gap-2"><button class="p-1">✏️</button><button class="p-1">🗑️</button></div></td>
+              </tr>
+              <tr class="hover:bg-gray-50 opacity-50">
+                <td class="px-4 py-3 font-medium">Keçi 2</td>
+                <td class="px-4 py-3 text-gray-600">Keçi</td>
+                <td class="px-4 py-3 text-gray-600">38 kg</td>
+                <td class="px-4 py-3 text-xs font-semibold text-red-600">0/1</td>
+                <td class="px-4 py-3 font-semibold text-emerald-700">₺9.500</td>
+                <td class="px-4 py-3 text-xs text-gray-500">7 Haz</td>
+                <td class="px-4 py-3"><span class="badge bg-gray-100 text-gray-500">Pasif</span></td>
+                <td class="px-4 py-3"><div class="flex gap-2"><button class="p-1">✏️</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <p class="text-center text-xs text-slate-400 pb-8">
+    Bu dosyayı herhangi bir tarayıcıda açarak arayüzü görebilirsiniz. · Next.js + Supabase
+  </p>
+
+</div>
+</body>
+</html>
