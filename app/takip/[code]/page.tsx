@@ -140,6 +140,18 @@ export default function TakipDetayPage() {
           </div>
         )}
 
+        {/* Kesim Fotoğrafı */}
+        {(order as Order & { photo_url?: string }).photo_url && (
+          <div className="card mb-4">
+            <h3 className="mb-3 text-sm font-semibold text-gray-700">📸 Kesim Fotoğrafı</h3>
+            <img
+              src={(order as Order & { photo_url?: string }).photo_url}
+              alt="Kesim fotoğrafı"
+              className="w-full rounded-xl object-cover max-h-64"
+            />
+          </div>
+        )}
+
         {/* Order Details */}
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="card">

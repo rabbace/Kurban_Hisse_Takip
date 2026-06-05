@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { createClient } from "@/lib/supabase";
 import { Animal, ANIMAL_TYPE_LABELS, DELIVERY_TYPE_LABELS, DeliveryType } from "@/lib/types";
-import { formatCurrency, formatDate, generateTrackingCode } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { CheckCircle2, Copy, ChevronLeft, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 
@@ -61,60 +61,32 @@ function SiparisContent() {
     setSubmitting(true);
     setError("");
 
-    const supabase = createClient();
-    const code = generateTrackingCode();
-
-    const { data: customer, error: custErr } = await supabase
-      .from("customers")
-      .insert({
+    const res = await fetch("/api/orders/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        animal_id: animal.id,
+        share_count: shareCount,
         full_name: form.full_name.trim(),
         phone: form.phone.trim(),
         email: form.email.trim() || null,
         tc_no: form.tc_no.trim() || null,
         address: form.address.trim() || null,
-      })
-      .select()
-      .single();
+        delivery_type: form.delivery_type,
+        appointment_datetime: form.appointment_datetime || null,
+        notes: form.notes.trim() || null,
+      }),
+    });
 
-    if (custErr || !customer) {
-      setError("Müşteri kaydı oluşturulamadı. Lütfen tekrar deneyin.");
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || "Sipariş oluşturulamadı.");
       setSubmitting(false);
       return;
     }
 
-    const { error: orderErr } = await supabase.from("orders").insert({
-      tracking_code: code,
-      customer_id: customer.id,
-      animal_id: animal.id,
-      share_count: shareCount,
-      order_type: isHisse ? "hisse" : "tam_hayvan",
-      total_price: totalPrice,
-      status: "beklemede",
-      delivery_type: form.delivery_type,
-      appointment_datetime: form.appointment_datetime || null,
-      notes: form.notes.trim() || null,
-    });
-
-    if (orderErr) {
-      setError("Sipariş oluşturulamadı: " + orderErr.message);
-      setSubmitting(false);
-      return;
-    }
-
-    // Decrement available shares
-    await supabase
-      .from("animals")
-      .update({ available_shares: animal.available_shares - shareCount })
-      .eq("id", animal.id);
-
-    // Log
-    await supabase.from("slaughter_logs").insert({
-      order_id: null,
-      status: "beklemede",
-      note: "Sipariş alındı.",
-    });
-
-    setTrackingCode(code);
+    setTrackingCode(data.tracking_code);
     setSubmitting(false);
   }
 

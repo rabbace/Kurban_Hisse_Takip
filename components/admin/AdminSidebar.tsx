@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, List, PawPrint, Scissors, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, List, PawPrint, Scissors, Tag, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase";
@@ -12,6 +12,7 @@ const navItems = [
   { href: "/admin/siparisler", label: "Siparişler", icon: List },
   { href: "/admin/hayvanlar", label: "Hayvanlar", icon: PawPrint },
   { href: "/admin/kesim", label: "Kesim Takvimi", icon: Scissors },
+  { href: "/admin/etiketler", label: "QR Etiketler", icon: Tag },
 ];
 
 export default function AdminSidebar() {

@@ -67,14 +67,35 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
           </div>
         )}
         {isHisse && (
-          <div className="flex items-center gap-1.5 text-xs text-gray-600">
-            <Users size={12} className="text-gray-400" />
-            <span>
-              {animal.total_shares} hisse &bull;{" "}
-              <span className="font-medium text-emerald-700">
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-xs text-gray-600">
+              <div className="flex items-center gap-1.5">
+                <Users size={12} className="text-gray-400" />
+                <span>{animal.total_shares} hisse</span>
+              </div>
+              <span className="font-semibold text-emerald-700">
                 {animal.available_shares} mevcut
               </span>
-            </span>
+            </div>
+            <div className="h-1.5 w-full rounded-full bg-gray-100 overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  animal.available_shares === 0
+                    ? "bg-red-400"
+                    : animal.available_shares <= Math.ceil(animal.total_shares * 0.3)
+                    ? "bg-orange-400"
+                    : "bg-emerald-500"
+                }`}
+                style={{
+                  width: `${
+                    ((animal.total_shares - animal.available_shares) / animal.total_shares) * 100
+                  }%`,
+                }}
+              />
+            </div>
+            <p className="text-right text-xs text-gray-400">
+              {animal.total_shares - animal.available_shares}/{animal.total_shares} satıldı
+            </p>
           </div>
         )}
         {animal.slaughter_date && (
