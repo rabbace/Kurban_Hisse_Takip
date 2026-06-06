@@ -18,7 +18,8 @@ const STATUS_STEPS: OrderStatus[] = [
 ];
 
 export default function TakipDetayClient() {
-  const { code } = useParams<{ code: string }>();
+  const params = useParams<{ code: string }>();
+  const code = params?.code ?? "";
   const [order, setOrder] = useState<(Order & { photo_url?: string }) | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);

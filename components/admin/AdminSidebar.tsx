@@ -40,7 +40,7 @@ export default function AdminSidebar() {
 
       <nav className="flex-1 p-3 space-y-1">
         {navItems.map(({ href, label, icon: Icon, exact }) => {
-          const isActive = exact ? pathname === href : pathname.startsWith(href);
+          const isActive = exact ? pathname === href : (pathname ?? "").startsWith(href);
           return (
             <Link
               key={href}

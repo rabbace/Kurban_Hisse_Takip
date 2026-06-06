@@ -16,7 +16,7 @@ const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 function SiparisContent() {
   const params = useSearchParams();
   const router = useRouter();
-  const animalId = params.get("animal_id");
+  const animalId = params?.get("animal_id") ?? null;
 
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [loading, setLoading] = useState(true);
