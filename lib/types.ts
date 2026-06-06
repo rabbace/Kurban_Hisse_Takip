@@ -49,6 +49,7 @@ export interface Order {
   slaughter_completed_at: string | null;
   delivery_type: DeliveryType;
   notes: string | null;
+  photo_url?: string | null;
   created_at: string;
   customers?: Customer;
   animals?: Animal;
