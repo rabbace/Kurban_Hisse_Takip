@@ -3,7 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import DemoBanner from "@/components/DemoBanner";
 import { Search, ArrowRight } from "lucide-react";
+
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
+const DEMO_CODES = [
+  { code: "KRB-DEMO1234", label: "Kesim Başladı" },
+  { code: "KRB-DEMO5678", label: "Onaylandı" },
+  { code: "KRB-DEMO9012", label: "Kesildi" },
+  { code: "KRB-DEMO7890", label: "Teslim Edildi" },
+];
 
 export default function TakipPage() {
   const router = useRouter();
@@ -18,6 +28,7 @@ export default function TakipPage() {
 
   return (
     <div className="min-h-screen">
+      {DEMO && <DemoBanner />}
       <Navbar />
       <main className="mx-auto max-w-lg px-4 py-20 text-center">
         <span className="text-5xl">📦</span>
@@ -45,10 +56,30 @@ export default function TakipPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-xs text-gray-400">
-          Takip kodu KRB- ile başlar ve 8 karakter içerir. <br />
-          Örnek: KRB-AB3D7XYZ
-        </p>
+        {DEMO && (
+          <div className="mt-6 rounded-xl bg-amber-50 border border-amber-200 p-4 text-left">
+            <p className="text-xs font-semibold text-amber-800 mb-2">🔍 Demo takip kodları:</p>
+            <div className="space-y-1.5">
+              {DEMO_CODES.map(({ code: c, label }) => (
+                <button
+                  key={c}
+                  onClick={() => router.push(`/takip/${c}`)}
+                  className="flex items-center justify-between w-full rounded-lg bg-white border border-amber-200 px-3 py-2 hover:border-emerald-400 transition-colors"
+                >
+                  <span className="font-mono text-sm font-bold text-emerald-700">{c}</span>
+                  <span className="text-xs text-gray-500">{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!DEMO && (
+          <p className="mt-6 text-xs text-gray-400">
+            Takip kodu KRB- ile başlar ve 8 karakter içerir. <br />
+            Örnek: KRB-AB3D7XYZ
+          </p>
+        )}
       </main>
     </div>
   );

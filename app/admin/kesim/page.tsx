@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase";
 import { Order, STATUS_LABELS, STATUS_COLORS, DELIVERY_TYPE_LABELS } from "@/lib/types";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { Calendar, Clock, Loader2, RefreshCw } from "lucide-react";
+import { MOCK_ORDERS } from "@/lib/mock-data";
 
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 export default function AdminKesimPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +17,14 @@ export default function AdminKesimPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    if (DEMO) {
+      const filtered = MOCK_ORDERS.filter(o =>
+        o.appointment_datetime?.startsWith(selectedDate)
+      );
+      setOrders(filtered as unknown as Order[]);
+      setLoading(false);
+      return;
+    }
     const supabase = createClient();
     const { data } = await supabase
       .from("orders")

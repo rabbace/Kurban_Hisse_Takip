@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase";
 import { Animal, AnimalType, ANIMAL_TYPE_LABELS } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Plus, Edit2, Trash2, Loader2, X, Save } from "lucide-react";
+import { MOCK_ANIMALS } from "@/lib/mock-data";
 
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const emptyAnimal: Omit<Animal, "id" | "created_at"> = {
   name: "",
   type: "koyun",
@@ -30,6 +32,11 @@ export default function AdminHayvanlarPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    if (DEMO) {
+      setAnimals(MOCK_ANIMALS);
+      setLoading(false);
+      return;
+    }
     const supabase = createClient();
     const { data } = await supabase
       .from("animals")
@@ -68,6 +75,12 @@ export default function AdminHayvanlarPage() {
   async function handleSave() {
     if (!form.name || !form.price_per_share) return;
     setSaving(true);
+    if (DEMO) {
+      await new Promise(r => setTimeout(r, 500));
+      setSaving(false);
+      setShowForm(false);
+      return;
+    }
     const supabase = createClient();
 
     const payload = {
@@ -90,6 +103,7 @@ export default function AdminHayvanlarPage() {
   }
 
   async function handleDelete(id: string) {
+    if (DEMO) { setDeleteId(null); return; }
     const supabase = createClient();
     await supabase.from("animals").update({ is_active: false }).eq("id", id);
     setDeleteId(null);

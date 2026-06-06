@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { Loader2, Lock } from "lucide-react";
+
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 export default function AdminGirisPage() {
   const router = useRouter();
@@ -12,8 +14,13 @@ export default function AdminGirisPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (DEMO) router.replace("/admin");
+  }, [router]);
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    if (DEMO) { router.push("/admin"); return; }
     setLoading(true);
     setError("");
 

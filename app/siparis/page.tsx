@@ -3,11 +3,15 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import DemoBanner from "@/components/DemoBanner";
 import { createClient } from "@/lib/supabase";
 import { Animal, ANIMAL_TYPE_LABELS, DELIVERY_TYPE_LABELS, DeliveryType } from "@/lib/types";
+import { MOCK_ANIMALS } from "@/lib/mock-data";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { CheckCircle2, Copy, ChevronLeft, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
+
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 function SiparisContent() {
   const params = useSearchParams();
@@ -34,6 +38,12 @@ function SiparisContent() {
 
   useEffect(() => {
     if (!animalId) { router.push("/"); return; }
+    if (DEMO) {
+      const found = MOCK_ANIMALS.find((a) => a.id === animalId) ?? MOCK_ANIMALS[0];
+      setAnimal(found);
+      setLoading(false);
+      return;
+    }
     async function load() {
       const supabase = createClient();
       const { data } = await supabase
@@ -60,6 +70,13 @@ function SiparisContent() {
     }
     setSubmitting(true);
     setError("");
+
+    if (DEMO) {
+      await new Promise((r) => setTimeout(r, 800));
+      setTrackingCode("KRB-DEMO1234");
+      setSubmitting(false);
+      return;
+    }
 
     const res = await fetch("/api/orders/create", {
       method: "POST",
@@ -101,6 +118,7 @@ function SiparisContent() {
   if (trackingCode) {
     return (
       <div className="flex min-h-screen flex-col">
+        {DEMO && <DemoBanner />}
         <Navbar />
         <main className="mx-auto w-full max-w-lg px-4 py-16 text-center">
           <CheckCircle2 size={64} className="mx-auto text-emerald-500" />
@@ -136,6 +154,7 @@ function SiparisContent() {
 
   return (
     <div className="min-h-screen">
+      {DEMO && <DemoBanner />}
       <Navbar />
       <main className="mx-auto max-w-2xl px-4 py-8">
         <Link href="/" className="mb-6 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">

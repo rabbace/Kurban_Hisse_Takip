@@ -5,11 +5,19 @@ import { createClient } from "@/lib/supabase";
 import { Order, DELIVERY_TYPE_LABELS } from "@/lib/types";
 import { formatDateTime } from "@/lib/utils";
 import { Printer, RefreshCw, Loader2, CheckSquare, Square } from "lucide-react";
+import { MOCK_ORDERS } from "@/lib/mock-data";
 
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const SITE_URL =
   typeof window !== "undefined"
     ? window.location.origin
     : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+function qrSrc(url: string) {
+  // Static export: API routes unavailable, use public QR service
+  if (DEMO) return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(url)}`;
+  return `/api/qr?data=${encodeURIComponent(url)}`;
+}
 
 export default function AdminEtiketlerPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -22,6 +30,13 @@ export default function AdminEtiketlerPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    if (DEMO) {
+      const result = MOCK_ORDERS as unknown as Order[];
+      setOrders(result);
+      setSelected(new Set(result.map(o => o.id)));
+      setLoading(false);
+      return;
+    }
     const supabase = createClient();
     const { data } = await supabase
       .from("orders")
@@ -146,7 +161,7 @@ export default function AdminEtiketlerPage() {
                   </div>
                   {/* Mini QR preview */}
                   <img
-                    src={`/api/qr?data=${encodeURIComponent(`${SITE_URL}/takip/${o.tracking_code}`)}`}
+                    src={`${qrSrc(`${SITE_URL}/takip/${o.tracking_code}`)}`}
                     alt="QR"
                     className="w-12 h-12 rounded-lg border border-gray-200"
                   />
@@ -197,7 +212,7 @@ export default function AdminEtiketlerPage() {
             <div key={o.id} className="label" style={{ minHeight: "60mm" }}>
               <div style={{ display: "flex", gap: "4mm", alignItems: "flex-start" }}>
                 <img
-                  src={`/api/qr?data=${encodeURIComponent(`${SITE_URL}/takip/${o.tracking_code}`)}`}
+                  src={`${qrSrc(`${SITE_URL}/takip/${o.tracking_code}`)}`}
                   alt="QR"
                   style={{ width: "30mm", height: "30mm", flexShrink: 0 }}
                 />

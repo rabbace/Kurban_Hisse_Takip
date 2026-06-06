@@ -4,12 +4,13 @@ import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export const metadata = { title: "Admin | Kurban Takip" };
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
-  if (!user) {
-    redirect("/admin/giris");
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  if (!DEMO) {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) redirect("/admin/giris");
   }
 
   return (

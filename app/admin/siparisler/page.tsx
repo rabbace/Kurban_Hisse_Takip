@@ -12,7 +12,9 @@ import {
 } from "@/lib/types";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { Search, X, Loader2, RefreshCw, Camera, Calendar } from "lucide-react";
+import { MOCK_ORDERS } from "@/lib/mock-data";
 
+const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const ALL = "hepsi";
 const STATUS_OPTIONS: OrderStatus[] = [
   "beklemede", "onaylandi", "kesim_basladi", "kesildi", "teslim_edildi", "iptal",
@@ -33,6 +35,11 @@ export default function AdminSiparislerPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    if (DEMO) {
+      setOrders(MOCK_ORDERS as unknown as Order[]);
+      setLoading(false);
+      return;
+    }
     const supabase = createClient();
     let query = supabase
       .from("orders")
@@ -59,6 +66,13 @@ export default function AdminSiparislerPage() {
   async function handleStatusUpdate() {
     if (!selectedOrder) return;
     setUpdatingStatus(true);
+    if (DEMO) {
+      setSelectedOrder(null);
+      setStatusNote("");
+      setAppointmentDatetime("");
+      setUpdatingStatus(false);
+      return;
+    }
 
     await fetch("/api/orders/update-status", {
       method: "POST",
