@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import DemoBanner from "@/components/DemoBanner";
+import StickyCallBar from "@/components/StickyCallBar";
 import { createClient } from "@/lib/supabase";
 import { Animal, ANIMAL_TYPE_LABELS, DELIVERY_TYPE_LABELS, DeliveryType } from "@/lib/types";
 import { MOCK_ANIMALS } from "@/lib/mock-data";
@@ -110,25 +111,25 @@ function SiparisContent() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="animate-spin text-emerald-600" size={32} />
+        <Loader2 className="animate-spin text-red-600" size={32} />
       </div>
     );
   }
 
   if (trackingCode) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col pb-14 sm:pb-0">
         {DEMO && <DemoBanner />}
         <Navbar />
         <main className="mx-auto w-full max-w-lg px-4 py-16 text-center">
-          <CheckCircle2 size={64} className="mx-auto text-emerald-500" />
+          <CheckCircle2 size={64} className="mx-auto text-red-500" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900">Siparişiniz Alındı!</h1>
           <p className="mt-2 text-gray-600">
             Takip kodunuzu saklayın. Bu kod ile siparişinizi takip edebilirsiniz.
           </p>
-          <div className="mt-6 rounded-2xl bg-emerald-50 p-6">
-            <p className="text-sm text-emerald-700">Takip Kodunuz</p>
-            <p className="mt-1 text-3xl font-black tracking-widest text-emerald-900">
+          <div className="mt-6 rounded-2xl bg-red-50 p-6">
+            <p className="text-sm text-red-700">Takip Kodunuz</p>
+            <p className="mt-1 text-3xl font-black tracking-widest text-red-900">
               {trackingCode}
             </p>
             <button
@@ -148,12 +149,13 @@ function SiparisContent() {
             </Link>
           </div>
         </main>
+        <StickyCallBar />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-14 sm:pb-0">
       {DEMO && <DemoBanner />}
       <Navbar />
       <main className="mx-auto max-w-2xl px-4 py-8">
@@ -164,7 +166,7 @@ function SiparisContent() {
 
         {/* Animal Summary */}
         <div className="card mb-6">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-red-600">
             {ANIMAL_TYPE_LABELS[animal!.type]}
           </p>
           <h2 className="mt-1 text-xl font-bold">{animal!.name}</h2>
@@ -204,7 +206,7 @@ function SiparisContent() {
           )}
           <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
             <p className="text-sm text-gray-500">Toplam Tutar</p>
-            <p className="text-2xl font-extrabold text-emerald-700">
+            <p className="text-2xl font-extrabold text-red-700">
               {formatCurrency(totalPrice)}
             </p>
           </div>
@@ -288,7 +290,7 @@ function SiparisContent() {
                     key={value}
                     className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-all ${
                       form.delivery_type === value
-                        ? "border-emerald-500 bg-emerald-50"
+                        ? "border-red-500 bg-red-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
@@ -298,7 +300,7 @@ function SiparisContent() {
                       value={value}
                       checked={form.delivery_type === value}
                       onChange={() => setForm({ ...form, delivery_type: value })}
-                      className="accent-emerald-600"
+                      className="accent-red-600"
                     />
                     <span className="text-sm font-medium text-gray-700">{label}</span>
                   </label>
@@ -354,13 +356,14 @@ function SiparisContent() {
           </button>
         </form>
       </main>
+      <StickyCallBar />
     </div>
   );
 }
 
 export default function SiparisPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><Loader2 className="animate-spin text-emerald-600" size={32} /></div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><Loader2 className="animate-spin text-red-600" size={32} /></div>}>
       <SiparisContent />
     </Suspense>
   );

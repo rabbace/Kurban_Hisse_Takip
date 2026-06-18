@@ -65,7 +65,7 @@ export default function AdminKesimPage() {
       </div>
 
       <div className="flex items-center gap-3">
-        <Calendar size={18} className="text-emerald-600" />
+        <Calendar size={18} className="text-red-600" />
         <input
           type="date"
           className="input text-sm py-2"
@@ -76,7 +76,7 @@ export default function AdminKesimPage() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="animate-spin text-emerald-600" size={28} />
+          <Loader2 className="animate-spin text-red-600" size={28} />
         </div>
       ) : orders.length === 0 ? (
         <div className="py-16 text-center text-gray-400">
@@ -88,9 +88,9 @@ export default function AdminKesimPage() {
           {Object.entries(grouped).map(([hour, slotOrders]) => (
             <div key={hour} className="card">
               <div className="flex items-center gap-2 mb-3">
-                <Clock size={16} className="text-emerald-600" />
+                <Clock size={16} className="text-red-600" />
                 <span className="font-bold text-gray-800">{hour}</span>
-                <span className="badge bg-emerald-100 text-emerald-700">
+                <span className="badge bg-red-100 text-red-700">
                   {slotOrders.length} sipariş
                 </span>
               </div>
@@ -117,7 +117,7 @@ export default function AdminKesimPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-semibold text-emerald-700 text-sm">
+                      <span className="font-semibold text-red-700 text-sm">
                         {formatCurrency(o.total_price)}
                       </span>
                       <span

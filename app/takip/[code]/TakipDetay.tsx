@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import DemoBanner from "@/components/DemoBanner";
+import StickyCallBar from "@/components/StickyCallBar";
 import { createClient } from "@/lib/supabase";
 import { MOCK_ORDERS } from "@/lib/mock-data";
 import { Order, OrderStatus, STATUS_LABELS, ANIMAL_TYPE_LABELS, DELIVERY_TYPE_LABELS } from "@/lib/types";
@@ -51,19 +52,20 @@ export default function TakipDetayClient() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col pb-14 sm:pb-0">
         {DEMO && <DemoBanner />}
         <Navbar />
         <div className="flex flex-1 items-center justify-center">
-          <Loader2 className="animate-spin text-emerald-600" size={32} />
+          <Loader2 className="animate-spin text-red-600" size={32} />
         </div>
+        <StickyCallBar />
       </div>
     );
   }
 
   if (notFound || !order) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col pb-14 sm:pb-0">
         {DEMO && <DemoBanner />}
         <Navbar />
         <div className="mx-auto max-w-md px-4 py-20 text-center">
@@ -79,6 +81,7 @@ export default function TakipDetayClient() {
           )}
           <Link href="/takip" className="btn-primary mt-6">Tekrar Dene</Link>
         </div>
+        <StickyCallBar />
       </div>
     );
   }
@@ -89,7 +92,7 @@ export default function TakipDetayClient() {
     : STATUS_STEPS.indexOf(order.status as OrderStatus);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-14 sm:pb-0">
       {DEMO && <DemoBanner />}
       <Navbar />
       <main className="mx-auto max-w-2xl px-4 py-8">
@@ -97,7 +100,7 @@ export default function TakipDetayClient() {
         <div className="card mb-4 flex items-start justify-between gap-4">
           <div>
             <p className="text-xs text-gray-500">Takip Kodu</p>
-            <p className="text-xl font-black tracking-widest text-emerald-700">
+            <p className="text-xl font-black tracking-widest text-red-700">
               {order.tracking_code}
             </p>
             <p className="mt-1 text-xs text-gray-400">
@@ -107,7 +110,7 @@ export default function TakipDetayClient() {
           {isCancelled ? (
             <span className="badge bg-red-100 text-red-700 text-sm">İptal Edildi</span>
           ) : (
-            <span className="badge bg-emerald-100 text-emerald-800 text-sm">
+            <span className="badge bg-red-100 text-red-800 text-sm">
               {STATUS_LABELS[order.status as OrderStatus]}
             </span>
           )}
@@ -125,20 +128,20 @@ export default function TakipDetayClient() {
                   <div key={step} className="flex items-center gap-3">
                     <div className="shrink-0">
                       {isDone ? (
-                        <CheckCircle2 size={20} className="text-emerald-500" />
+                        <CheckCircle2 size={20} className="text-red-500" />
                       ) : (
                         <Circle size={20} className="text-gray-300" />
                       )}
                     </div>
                     <div className="flex-1">
                       <p className={`text-sm font-medium ${
-                        isCurrent ? "text-emerald-700" : isDone ? "text-gray-700" : "text-gray-400"
+                        isCurrent ? "text-red-700" : isDone ? "text-gray-700" : "text-gray-400"
                       }`}>
                         {STATUS_LABELS[step]}
                       </p>
                     </div>
                     {isCurrent && (
-                      <span className="badge bg-emerald-100 text-emerald-700 animate-pulse">Şu an</span>
+                      <span className="badge bg-red-100 text-red-700 animate-pulse">Şu an</span>
                     )}
                   </div>
                 );
@@ -183,7 +186,7 @@ export default function TakipDetayClient() {
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-500">Tutar</span>
-                <span className="font-bold text-emerald-700">{formatCurrency(order.total_price)}</span>
+                <span className="font-bold text-red-700">{formatCurrency(order.total_price)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-500">Teslimat</span>
@@ -228,6 +231,7 @@ export default function TakipDetayClient() {
           <Link href="/takip" className="btn-secondary text-sm">Başka Sipariş Sorgula</Link>
         </div>
       </main>
+      <StickyCallBar />
     </div>
   );
 }

@@ -170,7 +170,7 @@ export default function AdminHayvanlarPage() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="animate-spin text-emerald-600" size={28} />
+          <Loader2 className="animate-spin text-red-600" size={28} />
         </div>
       ) : (
         <div className="card overflow-hidden p-0">
@@ -220,13 +220,13 @@ export default function AdminHayvanlarPage() {
                         className={`text-xs font-semibold ${
                           a.available_shares === 0
                             ? "text-red-600"
-                            : "text-emerald-700"
+                            : "text-red-700"
                         }`}
                       >
                         {a.available_shares}/{a.total_shares}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-emerald-700">
+                    <td className="px-4 py-3 font-semibold text-red-700">
                       {formatCurrency(a.price_per_share)}
                     </td>
                     <td className="px-4 py-3 text-gray-500 text-xs">
@@ -410,7 +410,7 @@ export default function AdminHayvanlarPage() {
                     />
                   )}
                   <label
-                    className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-emerald-400 hover:bg-emerald-50 ${
+                    className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-red-400 hover:bg-red-50 ${
                       uploadingPhoto ? "pointer-events-none opacity-50" : ""
                     }`}
                   >
@@ -450,7 +450,7 @@ export default function AdminHayvanlarPage() {
                     id="is_active"
                     checked={form.is_active}
                     onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-                    className="accent-emerald-600"
+                    className="accent-red-600"
                   />
                   <label htmlFor="is_active" className="text-sm text-gray-700">
                     Aktif (sitede göster)

@@ -151,7 +151,7 @@ export default function AdminSiparislerPage() {
               onClick={() => setStatusFilter(s)}
               className={`rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
                 statusFilter === s
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-red-600 text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -173,7 +173,7 @@ export default function AdminSiparislerPage() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="animate-spin text-emerald-600" size={28} />
+          <Loader2 className="animate-spin text-red-600" size={28} />
         </div>
       ) : filtered.length === 0 ? (
         <div className="py-16 text-center text-gray-400">
@@ -194,7 +194,7 @@ export default function AdminSiparislerPage() {
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-mono text-xs font-bold text-emerald-700">
+                    <td className="px-4 py-3 font-mono text-xs font-bold text-red-700">
                       {order.tracking_code}
                     </td>
                     <td className="px-4 py-3">
@@ -207,7 +207,7 @@ export default function AdminSiparislerPage() {
                         {order.animals ? ANIMAL_TYPE_LABELS[order.animals.type] : ""} · {order.share_count} hisse
                       </p>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-emerald-700">
+                    <td className="px-4 py-3 font-semibold text-red-700">
                       {formatCurrency(order.total_price)}
                     </td>
                     <td className="px-4 py-3 text-xs text-gray-600">
@@ -225,7 +225,7 @@ export default function AdminSiparislerPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => openStatusModal(order)}
-                          className="text-xs text-emerald-600 hover:text-emerald-800 font-medium"
+                          className="text-xs text-red-600 hover:text-red-800 font-medium"
                         >
                           Güncelle
                         </button>
@@ -268,7 +268,7 @@ export default function AdminSiparislerPage() {
                     onClick={() => setNewStatus(s)}
                     className={`rounded-xl border px-3 py-2 text-xs font-medium transition-all ${
                       newStatus === s
-                        ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                        ? "border-red-500 bg-red-50 text-red-700"
                         : "border-gray-200 text-gray-600 hover:border-gray-300"
                     }`}
                   >
@@ -344,7 +344,7 @@ export default function AdminSiparislerPage() {
               />
             )}
 
-            <label className={`flex flex-col items-center justify-center gap-2 w-full rounded-xl border-2 border-dashed border-gray-300 p-6 cursor-pointer hover:border-emerald-400 hover:bg-emerald-50 transition-all ${uploadingPhoto ? "opacity-50 pointer-events-none" : ""}`}>
+            <label className={`flex flex-col items-center justify-center gap-2 w-full rounded-xl border-2 border-dashed border-gray-300 p-6 cursor-pointer hover:border-red-400 hover:bg-red-50 transition-all ${uploadingPhoto ? "opacity-50 pointer-events-none" : ""}`}>
               <Camera size={28} className="text-gray-400" />
               <span className="text-sm text-gray-600 font-medium">
                 {uploadingPhoto ? "Yükleniyor..." : "Fotoğraf seç veya sürükle"}

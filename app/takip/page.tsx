@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import DemoBanner from "@/components/DemoBanner";
+import StickyCallBar from "@/components/StickyCallBar";
 import { Search, ArrowRight } from "lucide-react";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
@@ -27,7 +28,7 @@ export default function TakipPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-14 sm:pb-0">
       {DEMO && <DemoBanner />}
       <Navbar />
       <main className="mx-auto max-w-lg px-4 py-20 text-center">
@@ -64,9 +65,9 @@ export default function TakipPage() {
                 <button
                   key={c}
                   onClick={() => router.push(`/takip/${c}`)}
-                  className="flex items-center justify-between w-full rounded-lg bg-white border border-amber-200 px-3 py-2 hover:border-emerald-400 transition-colors"
+                  className="flex items-center justify-between w-full rounded-lg bg-white border border-amber-200 px-3 py-2 hover:border-red-400 transition-colors"
                 >
-                  <span className="font-mono text-sm font-bold text-emerald-700">{c}</span>
+                  <span className="font-mono text-sm font-bold text-red-700">{c}</span>
                   <span className="text-xs text-gray-500">{label}</span>
                 </button>
               ))}
@@ -81,6 +82,7 @@ export default function TakipPage() {
           </p>
         )}
       </main>
+      <StickyCallBar />
     </div>
   );
 }

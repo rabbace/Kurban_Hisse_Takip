@@ -15,7 +15,7 @@ const ANIMAL_EMOJIS: Record<string, string> = {
 const ANIMAL_BG: Record<string, string> = {
   koyun: "from-amber-50 to-orange-50",
   keci: "from-lime-50 to-green-50",
-  dana: "from-emerald-50 to-teal-50",
+  dana: "from-rose-50 to-amber-50",
   deve: "from-yellow-50 to-amber-50",
 };
 
@@ -47,7 +47,7 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
 
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-red-600">
             {ANIMAL_TYPE_LABELS[animal.type]}
           </p>
           <h3 className="mt-0.5 text-base font-bold text-gray-900">{animal.name}</h3>
@@ -55,7 +55,7 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
         {isSoldOut ? (
           <span className="badge bg-red-100 text-red-700 shrink-0">Tükendi</span>
         ) : isHisse ? (
-          <span className="badge bg-emerald-100 text-emerald-700 shrink-0">
+          <span className="badge bg-red-100 text-red-700 shrink-0">
             {animal.available_shares} hisse kaldı
           </span>
         ) : (
@@ -81,7 +81,7 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
                 <Users size={12} className="text-gray-400" />
                 <span>{animal.total_shares} hisse</span>
               </div>
-              <span className="font-semibold text-emerald-700">
+              <span className="font-semibold text-red-700">
                 {animal.available_shares} mevcut
               </span>
             </div>
@@ -92,7 +92,7 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
                     ? "bg-red-400"
                     : animal.available_shares <= Math.ceil(animal.total_shares * 0.3)
                     ? "bg-orange-400"
-                    : "bg-emerald-500"
+                    : "bg-red-500"
                 }`}
                 style={{
                   width: `${
@@ -117,7 +117,7 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
       <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
         <div>
           <p className="text-xs text-gray-500">{isHisse ? "Hisse başına" : "Fiyat"}</p>
-          <p className="text-lg font-bold text-emerald-700">
+          <p className="text-lg font-bold text-red-700">
             {formatCurrency(animal.price_per_share)}
           </p>
         </div>

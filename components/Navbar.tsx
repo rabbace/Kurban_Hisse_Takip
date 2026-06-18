@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, Menu, X, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -16,13 +16,13 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 bg-red-700 shadow-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl">🐑</span>
           <div>
-            <p className="text-sm font-bold leading-tight text-emerald-700">Kurban</p>
-            <p className="text-xs font-medium leading-tight text-gray-500">Hisse Takip</p>
+            <p className="text-sm font-bold leading-tight text-white">Kurban</p>
+            <p className="text-xs font-medium leading-tight text-red-200">Hisse Takip</p>
           </div>
         </Link>
 
@@ -32,10 +32,10 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
                 pathname === link.href
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-white/15 text-white"
+                  : "text-red-100 hover:bg-white/10 hover:text-white"
               )}
             >
               {link.label}
@@ -44,12 +44,24 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/takip" className="btn-primary hidden text-xs md:inline-flex">
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=%C4%B0zgara%20%C4%B0zgara"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="icon-btn hidden md:inline-flex"
+            aria-label="Konum"
+          >
+            <MapPin size={17} />
+          </a>
+          <a href="tel:+905001234567" className="icon-btn hidden md:inline-flex" aria-label="Telefon">
+            <Phone size={17} />
+          </a>
+          <Link href="/takip" className="btn-primary hidden bg-white text-xs text-red-700 hover:bg-red-50 md:inline-flex">
             <Search size={14} />
             Sipariş Sorgula
           </Link>
           <button
-            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
+            className="rounded-full p-2 text-white hover:bg-white/10 md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -58,7 +70,7 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-gray-100 bg-white px-4 pb-4 md:hidden">
+        <div className="border-t border-white/10 bg-red-700 px-4 pb-4 md:hidden">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -67,13 +79,27 @@ export default function Navbar() {
               className={cn(
                 "block rounded-lg px-3 py-2.5 text-sm font-medium",
                 pathname === link.href
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "text-gray-700 hover:bg-gray-50"
+                  ? "bg-white/15 text-white"
+                  : "text-red-100 hover:bg-white/10"
               )}
             >
               {link.label}
             </Link>
           ))}
+          <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=%C4%B0zgara%20%C4%B0zgara"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="icon-btn"
+              aria-label="Konum"
+            >
+              <MapPin size={17} />
+            </a>
+            <a href="tel:+905001234567" className="icon-btn" aria-label="Telefon">
+              <Phone size={17} />
+            </a>
+          </div>
         </div>
       )}
     </header>

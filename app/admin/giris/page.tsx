@@ -41,14 +41,14 @@ export default function AdminGirisPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-emerald-800 to-emerald-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-800 to-red-950 px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 mb-4">
             <Lock size={28} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white">Admin Girişi</h1>
-          <p className="text-emerald-300 text-sm mt-1">Kurban Hisse Takip Sistemi</p>
+          <p className="text-red-300 text-sm mt-1">Kurban Hisse Takip Sistemi</p>
         </div>
 
         <form onSubmit={handleLogin} className="card space-y-4">

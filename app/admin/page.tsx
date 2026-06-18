@@ -68,7 +68,7 @@ export default function AdminDashboardPage() {
   }, []);
 
   if (!data) {
-    return <div className="flex justify-center items-center h-full p-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600" /></div>;
+    return <div className="flex justify-center items-center h-full p-20"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600" /></div>;
   }
 
   const stats = [
@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-gray-700">Son Siparişler</h2>
-            <Link href="/admin/siparisler" className="text-xs text-emerald-600 hover:underline">Tümünü Gör →</Link>
+            <Link href="/admin/siparisler" className="text-xs text-red-600 hover:underline">Tümünü Gör →</Link>
           </div>
           <div className="space-y-3">
             {data.recentOrders.map((o) => (
@@ -143,7 +143,7 @@ export default function AdminDashboardPage() {
                   <p className="text-xs text-gray-400">{o.tracking_code as string}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-emerald-700">{formatCurrency(o.total_price as number)}</p>
+                  <p className="font-semibold text-red-700">{formatCurrency(o.total_price as number)}</p>
                   <span className={`badge text-xs ${STATUS_COLORS[o.status as OrderStatus]}`}>
                     {STATUS_LABELS[o.status as OrderStatus]}
                   </span>

@@ -28,12 +28,12 @@ export default function AdminSidebar() {
 
   const NavContent = () => (
     <>
-      <div className="p-4 border-b border-emerald-700">
+      <div className="p-4 border-b border-red-700">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🐑</span>
           <div>
             <p className="text-sm font-bold text-white">Kurban Takip</p>
-            <p className="text-xs text-emerald-300">Admin Paneli</p>
+            <p className="text-xs text-red-300">Admin Paneli</p>
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@ export default function AdminSidebar() {
                 "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
                 isActive
                   ? "bg-white/10 text-white"
-                  : "text-emerald-200 hover:bg-white/5 hover:text-white"
+                  : "text-red-200 hover:bg-white/5 hover:text-white"
               )}
             >
               <Icon size={18} />
@@ -60,10 +60,10 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-emerald-700">
+      <div className="p-3 border-t border-red-700">
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-emerald-200 hover:bg-white/5 hover:text-white transition-all"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-200 hover:bg-white/5 hover:text-white transition-all"
         >
           <LogOut size={18} />
           Çıkış Yap
@@ -75,7 +75,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Mobile top bar */}
-      <div className="flex items-center justify-between bg-emerald-800 px-4 py-3 md:hidden">
+      <div className="flex items-center justify-between bg-red-800 px-4 py-3 md:hidden">
         <div className="flex items-center gap-2">
           <span className="text-xl">🐑</span>
           <p className="text-sm font-bold text-white">Admin Panel</p>
@@ -92,7 +92,7 @@ export default function AdminSidebar() {
       {open && (
         <div className="fixed inset-0 z-50 bg-black/50 md:hidden" onClick={() => setOpen(false)}>
           <div
-            className="h-full w-64 bg-emerald-800 flex flex-col"
+            className="h-full w-64 bg-red-800 flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <NavContent />
@@ -101,7 +101,7 @@ export default function AdminSidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden w-56 flex-col bg-emerald-800 md:flex shrink-0">
+      <aside className="hidden w-56 flex-col bg-red-800 md:flex shrink-0">
         <NavContent />
       </aside>
     </>

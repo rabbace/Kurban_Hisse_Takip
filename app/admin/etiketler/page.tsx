@@ -123,7 +123,7 @@ export default function AdminEtiketlerPage() {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <Loader2 className="animate-spin text-emerald-600" size={28} />
+            <Loader2 className="animate-spin text-red-600" size={28} />
           </div>
         ) : orders.length === 0 ? (
           <div className="py-16 text-center text-gray-400">
@@ -135,7 +135,7 @@ export default function AdminEtiketlerPage() {
             <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
               <button onClick={toggleAll} className="flex items-center gap-2 text-sm text-gray-600">
                 {selected.size === orders.length ? (
-                  <CheckSquare size={16} className="text-emerald-600" />
+                  <CheckSquare size={16} className="text-red-600" />
                 ) : (
                   <Square size={16} />
                 )}
@@ -149,12 +149,12 @@ export default function AdminEtiketlerPage() {
                   key={o.id}
                   onClick={() => toggle(o.id)}
                   className={`flex items-center gap-4 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${
-                    selected.has(o.id) ? "bg-emerald-50/50" : ""
+                    selected.has(o.id) ? "bg-red-50/50" : ""
                   }`}
                 >
                   <div className="shrink-0">
                     {selected.has(o.id) ? (
-                      <CheckSquare size={18} className="text-emerald-600" />
+                      <CheckSquare size={18} className="text-red-600" />
                     ) : (
                       <Square size={18} className="text-gray-300" />
                     )}
@@ -175,7 +175,7 @@ export default function AdminEtiketlerPage() {
                       · {DELIVERY_TYPE_LABELS[o.delivery_type].split("(")[0]}
                     </p>
                   </div>
-                  <p className="font-mono text-xs font-bold text-emerald-700 shrink-0">
+                  <p className="font-mono text-xs font-bold text-red-700 shrink-0">
                     {o.tracking_code}
                   </p>
                 </div>
