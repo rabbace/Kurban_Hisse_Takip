@@ -30,11 +30,19 @@ export default function AnimalCard({ animal }: { animal: Animal }) {
       }`}
     >
       <div
-        className={`-mx-5 -mt-5 mb-4 flex items-center justify-center bg-gradient-to-br ${
+        className={`-mx-5 -mt-5 mb-4 flex items-center justify-center overflow-hidden bg-gradient-to-br ${
           ANIMAL_BG[animal.type]
-        } py-8`}
+        } ${animal.image_url ? "" : "py-8"}`}
       >
-        <span className="text-6xl">{ANIMAL_EMOJIS[animal.type]}</span>
+        {animal.image_url ? (
+          <img
+            src={animal.image_url}
+            alt={animal.name}
+            className={`h-40 w-full object-cover ${isSoldOut ? "grayscale" : ""}`}
+          />
+        ) : (
+          <span className="text-6xl">{ANIMAL_EMOJIS[animal.type]}</span>
+        )}
       </div>
 
       <div className="flex items-start justify-between gap-2">

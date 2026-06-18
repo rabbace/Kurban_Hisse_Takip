@@ -26,3 +26,27 @@ CREATE POLICY "order_photos_admin_upload"
 CREATE POLICY "order_photos_admin_update"
   ON storage.objects FOR UPDATE
   USING (bucket_id = 'order-photos' AND auth.role() = 'authenticated');
+
+-- ============================================================
+-- Güncelleme 3: Supabase Storage — animal-photos bucket
+-- Supabase Dashboard > Storage > New Bucket: "animal-photos" (Public: ON)
+-- Ardından aşağıdaki policy'leri SQL Editor'da çalıştırın:
+-- ============================================================
+
+-- Herkes hayvan fotoğraflarını görebilir
+CREATE POLICY "animal_photos_public_read"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'animal-photos');
+
+-- Sadece giriş yapmış admin yükleyebilir
+CREATE POLICY "animal_photos_admin_upload"
+  ON storage.objects FOR INSERT
+  WITH CHECK (
+    bucket_id = 'animal-photos'
+    AND auth.role() = 'authenticated'
+  );
+
+-- Admin silebilir / güncelleyebilir
+CREATE POLICY "animal_photos_admin_update"
+  ON storage.objects FOR UPDATE
+  USING (bucket_id = 'animal-photos' AND auth.role() = 'authenticated');

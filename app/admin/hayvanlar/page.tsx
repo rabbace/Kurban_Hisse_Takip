@@ -4,10 +4,17 @@ import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { Animal, AnimalType, ANIMAL_TYPE_LABELS } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Plus, Edit2, Trash2, Loader2, X, Save } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, X, Save, Camera } from "lucide-react";
 import { MOCK_ANIMALS } from "@/lib/mock-data";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+
+const ANIMAL_EMOJIS: Record<string, string> = {
+  koyun: "🐑",
+  keci: "🐐",
+  dana: "🐄",
+  deve: "🐪",
+};
 const emptyAnimal: Omit<Animal, "id" | "created_at"> = {
   name: "",
   type: "koyun",
@@ -29,6 +36,7 @@ export default function AdminHayvanlarPage() {
   const [form, setForm] = useState(emptyAnimal);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -102,6 +110,41 @@ export default function AdminHayvanlarPage() {
     load();
   }
 
+  async function handlePhotoUpload(file: File) {
+    setUploadingPhoto(true);
+
+    if (DEMO) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setForm((f) => ({ ...f, image_url: reader.result as string }));
+        setUploadingPhoto(false);
+      };
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    const supabase = createClient();
+    const ext = file.name.split(".").pop();
+    const path = `animals/${editing?.id ?? "new"}/${Date.now()}.${ext}`;
+
+    const { error: uploadErr } = await supabase.storage
+      .from("animal-photos")
+      .upload(path, file, { upsert: true });
+
+    if (uploadErr) {
+      alert("Fotoğraf yüklenemedi: " + uploadErr.message);
+      setUploadingPhoto(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("animal-photos")
+      .getPublicUrl(path);
+
+    setForm((f) => ({ ...f, image_url: urlData.publicUrl }));
+    setUploadingPhoto(false);
+  }
+
   async function handleDelete(id: string) {
     if (DEMO) { setDeleteId(null); return; }
     const supabase = createClient();
@@ -150,7 +193,22 @@ export default function AdminHayvanlarPage() {
               <tbody className="divide-y divide-gray-100">
                 {animals.map((a) => (
                   <tr key={a.id} className={`hover:bg-gray-50 ${!a.is_active ? "opacity-50" : ""}`}>
-                    <td className="px-4 py-3 font-medium text-gray-900">{a.name}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-gray-100 ${
+                            a.available_shares === 0 ? "grayscale" : ""
+                          }`}
+                        >
+                          {a.image_url ? (
+                            <img src={a.image_url} alt={a.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <span className="text-base">{ANIMAL_EMOJIS[a.type]}</span>
+                          )}
+                        </div>
+                        {a.name}
+                      </div>
+                    </td>
                     <td className="px-4 py-3 text-gray-600">
                       {ANIMAL_TYPE_LABELS[a.type]}
                     </td>
@@ -338,6 +396,38 @@ export default function AdminHayvanlarPage() {
                       setForm({ ...form, slaughter_date: e.target.value || null })
                     }
                   />
+                </div>
+
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Fotoğraf
+                  </label>
+                  {form.image_url && (
+                    <img
+                      src={form.image_url}
+                      alt="Önizleme"
+                      className="mb-2 h-32 w-full rounded-xl object-cover"
+                    />
+                  )}
+                  <label
+                    className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-emerald-400 hover:bg-emerald-50 ${
+                      uploadingPhoto ? "pointer-events-none opacity-50" : ""
+                    }`}
+                  >
+                    <Camera size={22} className="text-gray-400" />
+                    <span className="text-xs font-medium text-gray-600">
+                      {uploadingPhoto ? "Yükleniyor..." : "Fotoğraf seç"}
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handlePhotoUpload(file);
+                      }}
+                    />
+                  </label>
                 </div>
 
                 <div className="col-span-2">
