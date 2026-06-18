@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase";
 import { Animal, AnimalType, ANIMAL_TYPE_LABELS } from "@/lib/types";
 import { MOCK_ANIMALS } from "@/lib/mock-data";
 import { Search } from "lucide-react";
+import { PHONE_TEL, PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const ALL_FILTER = "hepsi";
@@ -19,6 +20,33 @@ const GALLERY_IMAGES = [
   "https://picsum.photos/seed/kurban-tesis3/480/320",
   "https://picsum.photos/seed/kurban-tesis4/480/320",
   "https://picsum.photos/seed/kurban-tesis5/480/320",
+];
+
+const FAQ_ITEMS = [
+  {
+    q: "Hisse nedir, nasıl çalışır?",
+    a: "Büyükbaş hayvanlar (dana, deve) 7 hisseye kadar bölünebilir. Hisse satın aldığınızda hayvanın o oranına sahip olursunuz; kesim sonrası etiniz payınıza göre teslim edilir.",
+  },
+  {
+    q: "Siparişimi nasıl tamamlarım?",
+    a: "İstediğiniz hayvanı seçip hisse sayısını belirleyin, kişisel bilgilerinizi girin ve siparişi onaylayın. Size bir takip kodu verilir.",
+  },
+  {
+    q: "Kesim randevusu nasıl belirlenir?",
+    a: "Sipariş formunda tercih ettiğiniz tarih ve saati belirtebilirsiniz. Onay sonrası kesin randevu bilgisi SMS ile iletilir.",
+  },
+  {
+    q: "Etlerimi nasıl teslim alırım?",
+    a: "Yerinde Kesim (Adreste), Paket Et (Kestikten Sonra Al) ve Üzerime Bırak (Firmada Kal) olmak üzere üç teslimat seçeneği sunuyoruz.",
+  },
+  {
+    q: "Siparişimi nasıl takip edebilirim?",
+    a: "Sipariş onayında aldığınız takip kodunu 'Sipariş Takip' sayfasına girerek kesim sürecinin her aşamasını anlık olarak görebilirsiniz.",
+  },
+  {
+    q: "Sorum var, kiminle iletişime geçebilirim?",
+    a: "Telefon veya WhatsApp üzerinden bize ulaşabilirsiniz; navbar ve sayfa altındaki iletişim butonlarını kullanabilirsiniz.",
+  },
 ];
 
 export default function HomePage() {
@@ -170,12 +198,29 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="border-t border-gray-200 bg-gray-50 py-10">
+        <div className="mx-auto max-w-3xl px-4">
+          <h2 className="mb-4 text-lg font-bold text-gray-900">Sıkça Sorulan Sorular</h2>
+          <div className="space-y-3">
+            {FAQ_ITEMS.map(({ q, a }) => (
+              <div key={q} className="card">
+                <p className="font-semibold text-gray-900">{q}</p>
+                <p className="mt-1 text-sm text-gray-600">{a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-gray-200 bg-white py-8">
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-gray-500">
           <p className="font-semibold text-gray-700">İzgara İzgara — Kurban Hisse Takip Sistemi</p>
           <p className="mt-1">
             Sorularınız için{" "}
-            <a href="tel:+905001234567" className="text-red-600 hover:underline">0500 123 45 67</a>
+            <a href={`tel:${PHONE_TEL}`} className="text-red-600 hover:underline">{PHONE_DISPLAY}</a>
+            {" "}veya{" "}
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline">WhatsApp</a>
           </p>
         </div>
       </footer>

@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { Search, Menu, X, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { PHONE_TEL, WHATSAPP_URL, MAPS_URL } from "@/lib/contact";
+import WhatsAppIcon from "@/components/icons/WhatsAppIcon";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -45,7 +47,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <a
-            href="https://www.google.com/maps/search/?api=1&query=%C4%B0zgara%20%C4%B0zgara"
+            href={MAPS_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="icon-btn hidden md:inline-flex"
@@ -53,8 +55,17 @@ export default function Navbar() {
           >
             <MapPin size={17} />
           </a>
-          <a href="tel:+905001234567" className="icon-btn hidden md:inline-flex" aria-label="Telefon">
+          <a href={`tel:${PHONE_TEL}`} className="icon-btn hidden md:inline-flex" aria-label="Telefon">
             <Phone size={17} />
+          </a>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="icon-btn hidden md:inline-flex"
+            aria-label="WhatsApp"
+          >
+            <WhatsAppIcon size={17} />
           </a>
           <Link href="/takip" className="btn-primary hidden bg-white text-xs text-red-700 hover:bg-red-50 md:inline-flex">
             <Search size={14} />
@@ -88,7 +99,7 @@ export default function Navbar() {
           ))}
           <div className="mt-2 flex gap-2 border-t border-white/10 pt-3">
             <a
-              href="https://www.google.com/maps/search/?api=1&query=%C4%B0zgara%20%C4%B0zgara"
+              href={MAPS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="icon-btn"
@@ -96,8 +107,17 @@ export default function Navbar() {
             >
               <MapPin size={17} />
             </a>
-            <a href="tel:+905001234567" className="icon-btn" aria-label="Telefon">
+            <a href={`tel:${PHONE_TEL}`} className="icon-btn" aria-label="Telefon">
               <Phone size={17} />
+            </a>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="icon-btn"
+              aria-label="WhatsApp"
+            >
+              <WhatsAppIcon size={17} />
             </a>
           </div>
         </div>
