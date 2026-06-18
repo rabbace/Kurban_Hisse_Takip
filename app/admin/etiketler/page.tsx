@@ -161,7 +161,7 @@ export default function AdminEtiketlerPage() {
                   </div>
                   {/* Mini QR preview */}
                   <img
-                    src={`${qrSrc(`${SITE_URL}/takip/${o.tracking_code}`)}`}
+                    src={`${qrSrc(`${SITE_URL}/hizli/${o.tracking_code}`)}`}
                     alt="QR"
                     className="w-12 h-12 rounded-lg border border-gray-200"
                   />
@@ -192,7 +192,8 @@ export default function AdminEtiketlerPage() {
             <li>A4 kağıda 4 etiket / sayfa şeklinde çıkar</li>
             <li>Etiketi hayvanın boynuna/kulağına klipsle takın</li>
             <li>Kesimden sonra aynı etiket et paketine yapıştırılır</li>
-            <li>Müşteri QR'ı okutarak kesim durumunu takip eder</li>
+            <li>Müşteri QR'ı okutursa kesim durumunu takip eder</li>
+            <li>Siz (admin) aynı QR'ı kendi telefonunuzdan okutursanız, o siparişin durumunu tek dokunuşla güncelleyebileceğiniz ekran açılır</li>
           </ol>
         </div>
       </div>
@@ -212,7 +213,7 @@ export default function AdminEtiketlerPage() {
             <div key={o.id} className="label" style={{ minHeight: "60mm" }}>
               <div style={{ display: "flex", gap: "4mm", alignItems: "flex-start" }}>
                 <img
-                  src={`${qrSrc(`${SITE_URL}/takip/${o.tracking_code}`)}`}
+                  src={`${qrSrc(`${SITE_URL}/hizli/${o.tracking_code}`)}`}
                   alt="QR"
                   style={{ width: "30mm", height: "30mm", flexShrink: 0 }}
                 />
