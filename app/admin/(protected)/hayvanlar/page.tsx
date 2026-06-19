@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase";
 import { Animal, AnimalType, ANIMAL_TYPE_LABELS } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Plus, Edit2, Trash2, Loader2, X, Save, Camera } from "lucide-react";
+import { Plus, Edit2, Trash2, Loader2, X, Save, Camera, Image as ImageIcon } from "lucide-react";
 import { MOCK_ANIMALS } from "@/lib/mock-data";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
@@ -460,25 +460,47 @@ export default function AdminHayvanlarPage() {
                       </button>
                     </div>
                   )}
-                  <label
-                    className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-red-400 hover:bg-red-50 ${
-                      uploadingPhoto ? "pointer-events-none opacity-50" : ""
-                    }`}
-                  >
-                    <Camera size={22} className="text-gray-400" />
-                    <span className="text-xs font-medium text-gray-600">
-                      {uploadingPhoto ? "Yükleniyor..." : "Fotoğraf seç"}
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handlePhotoUpload(file);
-                      }}
-                    />
-                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <label
+                      className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-red-400 hover:bg-red-50 ${
+                        uploadingPhoto ? "pointer-events-none opacity-50" : ""
+                      }`}
+                    >
+                      <Camera size={22} className="text-gray-400" />
+                      <span className="text-xs font-medium text-gray-600">
+                        {uploadingPhoto ? "Yükleniyor..." : "Fotoğraf çek"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handlePhotoUpload(file);
+                        }}
+                      />
+                    </label>
+                    <label
+                      className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-red-400 hover:bg-red-50 ${
+                        uploadingPhoto ? "pointer-events-none opacity-50" : ""
+                      }`}
+                    >
+                      <ImageIcon size={22} className="text-gray-400" />
+                      <span className="text-xs font-medium text-gray-600">
+                        {uploadingPhoto ? "Yükleniyor..." : "Galeriden seç"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handlePhotoUpload(file);
+                        }}
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 <div className="col-span-2">
