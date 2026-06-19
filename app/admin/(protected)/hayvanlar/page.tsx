@@ -113,8 +113,18 @@ export default function AdminHayvanlarPage() {
     load();
   }
 
+  async function deleteStoragePhoto(url: string) {
+    const marker = "/animal-photos/";
+    const idx = url.indexOf(marker);
+    if (idx === -1) return;
+    const path = url.slice(idx + marker.length);
+    const supabase = createClient();
+    await supabase.storage.from("animal-photos").remove([path]);
+  }
+
   async function handlePhotoUpload(file: File) {
     setUploadingPhoto(true);
+    const previousUrl = form.image_url;
 
     if (DEMO) {
       const reader = new FileReader();
@@ -146,6 +156,16 @@ export default function AdminHayvanlarPage() {
 
     setForm((f) => ({ ...f, image_url: urlData.publicUrl }));
     setUploadingPhoto(false);
+
+    if (previousUrl) await deleteStoragePhoto(previousUrl);
+  }
+
+  async function handleRemovePhoto() {
+    const url = form.image_url;
+    setForm((f) => ({ ...f, image_url: null }));
+    if (!DEMO && url && url.includes("/animal-photos/")) {
+      await deleteStoragePhoto(url);
+    }
   }
 
   async function handleDelete(id: string) {
@@ -424,11 +444,21 @@ export default function AdminHayvanlarPage() {
                     Fotoğraf
                   </label>
                   {form.image_url && (
-                    <img
-                      src={form.image_url}
-                      alt="Önizleme"
-                      className="mb-2 h-32 w-full rounded-xl object-cover"
-                    />
+                    <div className="relative mb-2">
+                      <img
+                        src={form.image_url}
+                        alt="Önizleme"
+                        className="h-32 w-full rounded-xl object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        title="Fotoğrafı kaldır"
+                        className="absolute right-2 top-2 rounded-full bg-black/60 p-1.5 text-white hover:bg-black/80"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
                   )}
                   <label
                     className={`flex w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-gray-300 p-4 transition-all hover:border-red-400 hover:bg-red-50 ${
