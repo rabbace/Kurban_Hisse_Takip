@@ -43,20 +43,19 @@ export async function POST(req: NextRequest) {
     const code = generateTrackingCode();
     const total_price = animal.price_per_share * share_count;
 
-    // Create customer
-    const { data: customer, error: custErr } = await supabase
-      .from("customers")
-      .insert({
-        full_name: full_name.trim(),
-        phone: phone.trim(),
-        email: email?.trim() || null,
-        tc_no: tc_no?.trim() || null,
-        address: address?.trim() || null,
-      })
-      .select()
-      .single();
+    // Create customer (customers table only allows public INSERT, not SELECT,
+    // so we generate the id ourselves instead of reading the row back).
+    const customerId = crypto.randomUUID();
+    const { error: custErr } = await supabase.from("customers").insert({
+      id: customerId,
+      full_name: full_name.trim(),
+      phone: phone.trim(),
+      email: email?.trim() || null,
+      tc_no: tc_no?.trim() || null,
+      address: address?.trim() || null,
+    });
 
-    if (custErr || !customer) {
+    if (custErr) {
       return NextResponse.json({ error: "Müşteri kaydı oluşturulamadı." }, { status: 500 });
     }
 
@@ -65,7 +64,7 @@ export async function POST(req: NextRequest) {
       .from("orders")
       .insert({
         tracking_code: code,
-        customer_id: customer.id,
+        customer_id: customerId,
         animal_id,
         share_count,
         order_type: animal.total_shares > 1 ? "hisse" : "tam_hayvan",
