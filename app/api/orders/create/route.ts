@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { generateTrackingCode } from "@/lib/utils";
 import { SMS } from "@/lib/sms";
+import { WhatsApp } from "@/lib/whatsapp";
 import { DeliveryType } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
@@ -94,8 +95,9 @@ export async function POST(req: NextRequest) {
       note: "Sipariş oluşturuldu.",
     });
 
-    // Send SMS (fire and forget)
+    // Send notifications (fire and forget)
     SMS.siparisAlindi(phone.trim(), full_name.trim(), code).catch(() => {});
+    WhatsApp.siparisAlindi(phone.trim(), full_name.trim(), code).catch(() => {});
 
     return NextResponse.json({ tracking_code: code });
   } catch (err) {

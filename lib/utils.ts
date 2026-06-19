@@ -34,6 +34,13 @@ export function formatDateTime(dateStr: string | null): string {
   }).format(new Date(dateStr));
 }
 
+export function cleanPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("0")) return "90" + digits.slice(1);
+  if (digits.startsWith("90")) return digits;
+  return "90" + digits;
+}
+
 export function generateTrackingCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "KRB-";

@@ -1,11 +1,6 @@
-const NETGSM_URL = "https://api.netgsm.com.tr/sms/send/get/";
+import { cleanPhone } from "./utils";
 
-function cleanPhone(phone: string): string {
-  const digits = phone.replace(/\D/g, "");
-  if (digits.startsWith("0")) return "90" + digits.slice(1);
-  if (digits.startsWith("90")) return digits;
-  return "90" + digits;
-}
+const NETGSM_URL = "https://api.netgsm.com.tr/sms/send/get/";
 
 async function sendSMS(phone: string, message: string): Promise<boolean> {
   const user = process.env.NETGSM_USER;

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { OrderStatus } from "@/lib/types";
 import { SMS } from "@/lib/sms";
+import { WhatsApp } from "@/lib/whatsapp";
 import { formatDateTime } from "@/lib/utils";
 
 export async function POST(req: NextRequest) {
@@ -63,15 +64,19 @@ export async function POST(req: NextRequest) {
     switch (status) {
       case "onaylandi":
         SMS.onaylandi(phone, name, appt).catch(() => {});
+        WhatsApp.onaylandi(phone, name, appt).catch(() => {});
         break;
       case "kesim_basladi":
         SMS.kesimBasladi(phone, name, code).catch(() => {});
+        WhatsApp.kesimBasladi(phone, name, code).catch(() => {});
         break;
       case "kesildi":
         SMS.kesildi(phone, name, order.delivery_type).catch(() => {});
+        WhatsApp.kesildi(phone, name, order.delivery_type).catch(() => {});
         break;
       case "teslim_edildi":
         SMS.teslimEdildi(phone, name).catch(() => {});
+        WhatsApp.teslimEdildi(phone, name).catch(() => {});
         break;
     }
   }
