@@ -73,10 +73,28 @@ export default function AdminEtiketlerPage() {
 
   function handlePrint() {
     setPrinting(true);
-    setTimeout(() => {
-      window.print();
-      setPrinting(false);
-    }, 200);
+    // The print layout is `hidden print:block`, so its <img> elements may
+    // still be loading (especially Supabase-hosted animal photos) when the
+    // user clicks print. Wait for them to finish before opening the print
+    // dialog, otherwise images render blank in the resulting PDF.
+    requestAnimationFrame(() => {
+      const imgs = Array.from(
+        document.querySelectorAll<HTMLImageElement>(".print-grid img")
+      );
+      const waits = imgs.map((img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise<void>((resolve) => {
+              img.addEventListener("load", () => resolve());
+              img.addEventListener("error", () => resolve());
+              setTimeout(resolve, 4000);
+            })
+      );
+      Promise.all(waits).then(() => {
+        window.print();
+        setPrinting(false);
+      });
+    });
   }
 
   const printOrders = orders.filter((o) => selected.has(o.id));
