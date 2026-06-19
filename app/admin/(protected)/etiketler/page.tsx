@@ -159,12 +159,23 @@ export default function AdminEtiketlerPage() {
                       <Square size={18} className="text-gray-300" />
                     )}
                   </div>
-                  {/* Mini QR preview */}
-                  <img
-                    src={`${qrSrc(`${SITE_URL}/hizli/${o.tracking_code}`)}`}
-                    alt="QR"
-                    className="w-12 h-12 rounded-lg border border-gray-200"
-                  />
+                  {/* Mini animal photo + QR preview */}
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    {o.animals?.image_url ? (
+                      <img
+                        src={o.animals.image_url}
+                        alt={o.animals.name}
+                        className="w-12 h-12 rounded-lg border border-gray-200 object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-lg border border-gray-200 bg-gray-100" />
+                    )}
+                    <img
+                      src={`${qrSrc(`${SITE_URL}/hizli/${o.tracking_code}`)}`}
+                      alt="QR"
+                      className="w-12 h-12 rounded-lg border border-gray-200"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-gray-900">{o.customers?.full_name}</p>
                     <p className="text-xs text-gray-500">
@@ -173,6 +184,7 @@ export default function AdminEtiketlerPage() {
                     <p className="text-xs text-gray-400">
                       {o.appointment_datetime ? formatDateTime(o.appointment_datetime) : "Randevu yok"}{" "}
                       · {DELIVERY_TYPE_LABELS[o.delivery_type].split("(")[0]}
+                      {o.animals?.location ? ` · 📍 ${o.animals.location}` : ""}
                     </p>
                   </div>
                   <p className="font-mono text-xs font-bold text-red-700 shrink-0">
@@ -212,11 +224,20 @@ export default function AdminEtiketlerPage() {
           {printOrders.map((o) => (
             <div key={o.id} className="label" style={{ minHeight: "60mm" }}>
               <div style={{ display: "flex", gap: "4mm", alignItems: "flex-start" }}>
-                <img
-                  src={`${qrSrc(`${SITE_URL}/hizli/${o.tracking_code}`)}`}
-                  alt="QR"
-                  style={{ width: "30mm", height: "30mm", flexShrink: 0 }}
-                />
+                <div style={{ display: "flex", flexDirection: "column", gap: "2mm", flexShrink: 0 }}>
+                  {o.animals?.image_url ? (
+                    <img
+                      src={o.animals.image_url}
+                      alt={o.animals.name}
+                      style={{ width: "30mm", height: "22mm", objectFit: "cover", borderRadius: "2mm" }}
+                    />
+                  ) : null}
+                  <img
+                    src={`${qrSrc(`${SITE_URL}/hizli/${o.tracking_code}`)}`}
+                    alt="QR"
+                    style={{ width: "30mm", height: "30mm" }}
+                  />
+                </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontFamily: "monospace", fontSize: "9pt", fontWeight: "bold", color: "#059669", marginBottom: "2mm" }}>
                     {o.tracking_code}
@@ -230,6 +251,11 @@ export default function AdminEtiketlerPage() {
                   <p style={{ fontSize: "9pt", color: "#333", marginBottom: "1mm" }}>
                     🐾 {o.animals?.name}
                   </p>
+                  {o.animals?.location && (
+                    <p style={{ fontSize: "9pt", color: "#333", marginBottom: "1mm" }}>
+                      📍 {o.animals.location}
+                    </p>
+                  )}
                   <p style={{ fontSize: "9pt", color: "#555", marginBottom: "1mm" }}>
                     {o.share_count} hisse · {DELIVERY_TYPE_LABELS[o.delivery_type].split("(")[0]}
                   </p>

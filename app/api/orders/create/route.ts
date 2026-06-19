@@ -3,7 +3,7 @@ import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { generateTrackingCode } from "@/lib/utils";
 import { SMS } from "@/lib/sms";
 import { WhatsApp } from "@/lib/whatsapp";
-import { DeliveryType } from "@/lib/types";
+import { DeliveryType, PaymentType } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
       tc_no,
       address,
       delivery_type,
+      payment_type,
       appointment_datetime,
       notes,
     } = body;
@@ -43,6 +44,10 @@ export async function POST(req: NextRequest) {
 
     const code = generateTrackingCode();
     const total_price = animal.price_per_share * share_count;
+    const paymentType: PaymentType = ["pesin", "kismi", "sonra"].includes(payment_type)
+      ? payment_type
+      : "sonra";
+    const paidAmount = paymentType === "pesin" ? total_price : 0;
 
     // Create customer (customers table only allows public INSERT, not SELECT,
     // so we generate the id ourselves instead of reading the row back).
@@ -72,6 +77,8 @@ export async function POST(req: NextRequest) {
         total_price,
         status: "beklemede",
         delivery_type: delivery_type as DeliveryType,
+        payment_type: paymentType,
+        paid_amount: paidAmount,
         appointment_datetime: appointment_datetime || null,
         notes: notes?.trim() || null,
       })

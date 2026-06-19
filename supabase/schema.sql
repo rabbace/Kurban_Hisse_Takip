@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS animals (
   description TEXT,
   image_url TEXT,
   slaughter_date DATE,
+  location TEXT,
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -46,6 +47,9 @@ CREATE TABLE IF NOT EXISTS orders (
   slaughter_completed_at TIMESTAMPTZ,
   delivery_type TEXT NOT NULL DEFAULT 'paket_et'
     CHECK (delivery_type IN ('yerinde_kesim','paket_et','uzerime_birak')),
+  payment_type TEXT NOT NULL DEFAULT 'sonra'
+    CHECK (payment_type IN ('pesin','kismi','sonra')),
+  paid_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
   notes TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

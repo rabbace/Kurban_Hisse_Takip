@@ -10,6 +10,10 @@ export type OrderStatus =
 
 export type DeliveryType = "yerinde_kesim" | "paket_et" | "uzerime_birak";
 
+export type PaymentType = "pesin" | "kismi" | "sonra";
+
+export type PaymentStatus = "odenmedi" | "kismi_odendi" | "odendi";
+
 export interface Animal {
   id: string;
   name: string;
@@ -21,6 +25,7 @@ export interface Animal {
   description: string | null;
   image_url: string | null;
   slaughter_date: string | null;
+  location: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -48,6 +53,8 @@ export interface Order {
   slaughter_started_at: string | null;
   slaughter_completed_at: string | null;
   delivery_type: DeliveryType;
+  payment_type: PaymentType;
+  paid_amount: number;
   notes: string | null;
   photo_url?: string | null;
   created_at: string;
@@ -92,4 +99,22 @@ export const DELIVERY_TYPE_LABELS: Record<DeliveryType, string> = {
   yerinde_kesim: "Yerinde Kesim (Adreste)",
   paket_et: "Paket Et (Kestikten Sonra Al)",
   uzerime_birak: "Üzerime Bırak (Firmada Kal)",
+};
+
+export const PAYMENT_TYPE_LABELS: Record<PaymentType, string> = {
+  pesin: "Peşin Öderim",
+  kismi: "Kapora + Kalanı Kesimden Sonra",
+  sonra: "Kesimden Sonra Öderim",
+};
+
+export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
+  odenmedi: "Ödenmedi",
+  kismi_odendi: "Kısmi Ödendi",
+  odendi: "Ödendi",
+};
+
+export const PAYMENT_STATUS_COLORS: Record<PaymentStatus, string> = {
+  odenmedi: "bg-red-100 text-red-700",
+  kismi_odendi: "bg-yellow-100 text-yellow-800",
+  odendi: "bg-green-100 text-green-700",
 };

@@ -9,9 +9,11 @@ import {
   STATUS_COLORS,
   DELIVERY_TYPE_LABELS,
   ANIMAL_TYPE_LABELS,
+  PAYMENT_STATUS_LABELS,
+  PAYMENT_STATUS_COLORS,
 } from "@/lib/types";
-import { formatCurrency, formatDateTime } from "@/lib/utils";
-import { Search, X, Loader2, RefreshCw, Camera, Calendar } from "lucide-react";
+import { formatCurrency, formatDateTime, getPaymentStatus } from "@/lib/utils";
+import { Search, X, Loader2, RefreshCw, Camera, Calendar, Wallet } from "lucide-react";
 import { MOCK_ORDERS } from "@/lib/mock-data";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
@@ -32,6 +34,9 @@ export default function AdminSiparislerPage() {
   const [appointmentDatetime, setAppointmentDatetime] = useState("");
   const [photoOrder, setPhotoOrder] = useState<Order | null>(null);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [paymentOrder, setPaymentOrder] = useState<Order | null>(null);
+  const [paidAmountInput, setPaidAmountInput] = useState("");
+  const [savingPayment, setSavingPayment] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -131,6 +136,35 @@ export default function AdminSiparislerPage() {
     setStatusNote("");
   }
 
+  function openPaymentModal(order: Order) {
+    setPaymentOrder(order);
+    setPaidAmountInput(String(order.paid_amount ?? 0));
+  }
+
+  async function handlePaymentSave() {
+    if (!paymentOrder) return;
+    const amount = Number(paidAmountInput);
+    if (Number.isNaN(amount) || amount < 0) return;
+    setSavingPayment(true);
+
+    if (DEMO) {
+      await new Promise((r) => setTimeout(r, 400));
+      setPaymentOrder(null);
+      setSavingPayment(false);
+      return;
+    }
+
+    const supabase = createClient();
+    await supabase
+      .from("orders")
+      .update({ paid_amount: amount })
+      .eq("id", paymentOrder.id);
+
+    setPaymentOrder(null);
+    setSavingPayment(false);
+    load();
+  }
+
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
@@ -186,7 +220,7 @@ export default function AdminSiparislerPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  {["Takip Kodu","Müşteri","Hayvan","Tutar","Teslimat","Randevu","Durum",""].map((h) => (
+                  {["Takip Kodu","Müşteri","Hayvan","Tutar","Ödeme","Teslimat","Randevu","Durum",""].map((h) => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-600">{h}</th>
                   ))}
                 </tr>
@@ -209,6 +243,20 @@ export default function AdminSiparislerPage() {
                     </td>
                     <td className="px-4 py-3 font-semibold text-red-700">
                       {formatCurrency(order.total_price)}
+                    </td>
+                    <td className="px-4 py-3">
+                      {(() => {
+                        const ps = getPaymentStatus(order.paid_amount ?? 0, order.total_price);
+                        return (
+                          <button
+                            onClick={() => openPaymentModal(order)}
+                            className={`badge ${PAYMENT_STATUS_COLORS[ps]}`}
+                            title="Ödeme bilgisini güncelle"
+                          >
+                            {PAYMENT_STATUS_LABELS[ps]}
+                          </button>
+                        );
+                      })()}
                     </td>
                     <td className="px-4 py-3 text-xs text-gray-600">
                       {DELIVERY_TYPE_LABELS[order.delivery_type].split(" ")[0]}
@@ -235,6 +283,13 @@ export default function AdminSiparislerPage() {
                           title="Fotoğraf yükle"
                         >
                           <Camera size={14} />
+                        </button>
+                        <button
+                          onClick={() => openPaymentModal(order)}
+                          className="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+                          title="Ödeme bilgisi"
+                        >
+                          <Wallet size={14} />
                         </button>
                       </div>
                     </td>
@@ -277,6 +332,18 @@ export default function AdminSiparislerPage() {
                 ))}
               </div>
             </div>
+
+            {(newStatus === "kesildi" || newStatus === "teslim_edildi") &&
+              (selectedOrder.paid_amount ?? 0) < selectedOrder.total_price && (
+                <div className="mb-4 rounded-xl bg-amber-50 p-3">
+                  <p className="text-sm font-medium text-amber-800">
+                    ⚠️ Bekleyen ödeme var: {formatCurrency(selectedOrder.total_price - (selectedOrder.paid_amount ?? 0))}
+                  </p>
+                  <p className="mt-1 text-xs text-amber-700">
+                    Müşteriden kalan tutarın tahsil edildiğini unutmayın.
+                  </p>
+                </div>
+              )}
 
             {/* Appointment confirmation when approving */}
             {newStatus === "onaylandi" && (
@@ -364,6 +431,53 @@ export default function AdminSiparislerPage() {
             <p className="mt-3 text-xs text-gray-400 text-center">
               Fotoğraf müşterinin takip sayfasında görünecektir.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Update Modal */}
+      {paymentOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-gray-900">Ödeme Bilgisi</h3>
+              <button onClick={() => setPaymentOrder(null)}><X size={20} className="text-gray-400" /></button>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              {paymentOrder.customers?.full_name} · {paymentOrder.tracking_code}
+            </p>
+
+            <div className="mb-4 rounded-xl bg-gray-50 p-3 text-sm">
+              <div className="flex justify-between text-gray-600">
+                <span>Toplam Tutar</span>
+                <span className="font-semibold text-gray-900">{formatCurrency(paymentOrder.total_price)}</span>
+              </div>
+            </div>
+
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Alınan Ödeme (₺)
+            </label>
+            <input
+              type="number"
+              min={0}
+              max={paymentOrder.total_price}
+              className="input text-sm mb-4"
+              value={paidAmountInput}
+              onChange={(e) => setPaidAmountInput(e.target.value)}
+            />
+
+            <div className="flex gap-3">
+              <button
+                onClick={handlePaymentSave}
+                className="btn-primary flex-1"
+                disabled={savingPayment}
+              >
+                {savingPayment ? (
+                  <><Loader2 size={14} className="animate-spin" /> Kaydediliyor...</>
+                ) : "Kaydet"}
+              </button>
+              <button onClick={() => setPaymentOrder(null)} className="btn-secondary">İptal</button>
+            </div>
           </div>
         </div>
       )}

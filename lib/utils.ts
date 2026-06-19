@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { PaymentStatus } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,6 +40,12 @@ export function cleanPhone(phone: string): string {
   if (digits.startsWith("0")) return "90" + digits.slice(1);
   if (digits.startsWith("90")) return digits;
   return "90" + digits;
+}
+
+export function getPaymentStatus(paidAmount: number, totalPrice: number): PaymentStatus {
+  if (paidAmount <= 0) return "odenmedi";
+  if (paidAmount >= totalPrice) return "odendi";
+  return "kismi_odendi";
 }
 
 export function generateTrackingCode(): string {

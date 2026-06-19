@@ -12,8 +12,10 @@ import {
   STATUS_COLORS,
   ANIMAL_TYPE_LABELS,
   DELIVERY_TYPE_LABELS,
+  PAYMENT_STATUS_LABELS,
+  PAYMENT_STATUS_COLORS,
 } from "@/lib/types";
-import { formatCurrency, formatDateTime } from "@/lib/utils";
+import { formatCurrency, formatDateTime, getPaymentStatus } from "@/lib/utils";
 import { ArrowLeft, Check, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 
 const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
@@ -126,7 +128,14 @@ export default function HizliGuncelleClient() {
       <main className="mx-auto max-w-md px-4 py-5 space-y-4">
         <div className="card">
           <div className="flex items-start justify-between gap-3">
-            <div>
+            {order.animals?.image_url ? (
+              <img
+                src={order.animals.image_url}
+                alt={order.animals.name}
+                className="h-16 w-16 shrink-0 rounded-xl border border-gray-200 object-cover"
+              />
+            ) : null}
+            <div className="flex-1">
               <p className="font-mono text-xs font-bold text-red-700">{order.tracking_code}</p>
               <p className="mt-1 text-lg font-bold text-gray-900">{order.customers?.full_name}</p>
               <p className="text-sm text-gray-500">{order.customers?.phone}</p>
@@ -139,9 +148,25 @@ export default function HizliGuncelleClient() {
             <p>
               {order.animals ? ANIMAL_TYPE_LABELS[order.animals.type] : ""} · {order.animals?.name} · {order.share_count} hisse
             </p>
+            {order.animals?.location && <p>📍 {order.animals.location}</p>}
             <p>{DELIVERY_TYPE_LABELS[order.delivery_type]}</p>
             {order.appointment_datetime && <p>Randevu: {formatDateTime(order.appointment_datetime)}</p>}
-            <p className="font-semibold text-red-700">{formatCurrency(order.total_price)}</p>
+            <div className="flex items-center justify-between pt-1">
+              <p className="font-semibold text-red-700">{formatCurrency(order.total_price)}</p>
+              {(() => {
+                const ps = getPaymentStatus(order.paid_amount ?? 0, order.total_price);
+                return (
+                  <span className={`badge ${PAYMENT_STATUS_COLORS[ps]}`}>
+                    {PAYMENT_STATUS_LABELS[ps]}
+                  </span>
+                );
+              })()}
+            </div>
+            {(order.paid_amount ?? 0) < order.total_price && (
+              <p className="text-xs text-amber-700">
+                Kalan: {formatCurrency(order.total_price - (order.paid_amount ?? 0))}
+              </p>
+            )}
           </div>
         </div>
 

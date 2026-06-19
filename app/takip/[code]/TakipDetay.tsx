@@ -7,8 +7,16 @@ import DemoBanner from "@/components/DemoBanner";
 import StickyCallBar from "@/components/StickyCallBar";
 import { createClient } from "@/lib/supabase";
 import { MOCK_ORDERS } from "@/lib/mock-data";
-import { Order, OrderStatus, STATUS_LABELS, ANIMAL_TYPE_LABELS, DELIVERY_TYPE_LABELS } from "@/lib/types";
-import { formatCurrency, formatDateTime, formatDate } from "@/lib/utils";
+import {
+  Order,
+  OrderStatus,
+  STATUS_LABELS,
+  ANIMAL_TYPE_LABELS,
+  DELIVERY_TYPE_LABELS,
+  PAYMENT_STATUS_LABELS,
+  PAYMENT_STATUS_COLORS,
+} from "@/lib/types";
+import { formatCurrency, formatDateTime, formatDate, getPaymentStatus } from "@/lib/utils";
 import { CheckCircle2, Circle, Loader2, AlertCircle, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -175,6 +183,9 @@ export default function TakipDetayClient() {
                 {order.animals.slaughter_date && (
                   <p className="text-gray-500">Kesim: {formatDate(order.animals.slaughter_date)}</p>
                 )}
+                {order.animals.location && (
+                  <p className="text-gray-500">📍 {order.animals.location}</p>
+                )}
               </div>
             ) : (
               <p className="text-sm text-gray-400">Bilgi yok</p>
@@ -188,6 +199,25 @@ export default function TakipDetayClient() {
                 <span className="text-gray-500">Tutar</span>
                 <span className="font-bold text-red-700">{formatCurrency(order.total_price)}</span>
               </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-500">Ödeme Durumu</span>
+                {(() => {
+                  const ps = getPaymentStatus(order.paid_amount ?? 0, order.total_price);
+                  return (
+                    <span className={`badge ${PAYMENT_STATUS_COLORS[ps]}`}>
+                      {PAYMENT_STATUS_LABELS[ps]}
+                    </span>
+                  );
+                })()}
+              </div>
+              {(order.paid_amount ?? 0) < order.total_price && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Kalan Tutar</span>
+                  <span className="font-medium text-amber-700">
+                    {formatCurrency(order.total_price - (order.paid_amount ?? 0))}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-gray-500">Teslimat</span>
                 <span className="text-right text-gray-700">{DELIVERY_TYPE_LABELS[order.delivery_type]}</span>

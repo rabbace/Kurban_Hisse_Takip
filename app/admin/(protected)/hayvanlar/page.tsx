@@ -25,6 +25,7 @@ const emptyAnimal: Omit<Animal, "id" | "created_at"> = {
   description: null,
   image_url: null,
   slaughter_date: null,
+  location: null,
   is_active: true,
 };
 
@@ -75,6 +76,7 @@ export default function AdminHayvanlarPage() {
       description: animal.description,
       image_url: animal.image_url,
       slaughter_date: animal.slaughter_date,
+      location: animal.location,
       is_active: animal.is_active,
     });
     setShowForm(true);
@@ -97,6 +99,7 @@ export default function AdminHayvanlarPage() {
       description: form.description || null,
       image_url: form.image_url || null,
       slaughter_date: form.slaughter_date || null,
+      location: form.location || null,
     };
 
     if (editing) {
@@ -178,7 +181,7 @@ export default function AdminHayvanlarPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  {["Adı", "Tür", "Ağırlık", "Hisse", "Fiyat/Hisse", "Kesim Tarihi", "Durum", ""].map(
+                  {["Adı", "Tür", "Ağırlık", "Konum", "Hisse", "Fiyat/Hisse", "Kesim Tarihi", "Durum", ""].map(
                     (h) => (
                       <th
                         key={h}
@@ -214,6 +217,9 @@ export default function AdminHayvanlarPage() {
                     </td>
                     <td className="px-4 py-3 text-gray-600">
                       {a.weight_kg ? `${a.weight_kg} kg` : "-"}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {a.location || "-"}
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -394,6 +400,21 @@ export default function AdminHayvanlarPage() {
                     value={form.slaughter_date ?? ""}
                     onChange={(e) =>
                       setForm({ ...form, slaughter_date: e.target.value || null })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Konum (Ahır)
+                  </label>
+                  <input
+                    type="text"
+                    className="input text-sm"
+                    placeholder="Ahır 1"
+                    value={form.location ?? ""}
+                    onChange={(e) =>
+                      setForm({ ...form, location: e.target.value || null })
                     }
                   />
                 </div>

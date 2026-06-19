@@ -6,7 +6,14 @@ import Navbar from "@/components/Navbar";
 import DemoBanner from "@/components/DemoBanner";
 import StickyCallBar from "@/components/StickyCallBar";
 import { createClient } from "@/lib/supabase";
-import { Animal, ANIMAL_TYPE_LABELS, DELIVERY_TYPE_LABELS, DeliveryType } from "@/lib/types";
+import {
+  Animal,
+  ANIMAL_TYPE_LABELS,
+  DELIVERY_TYPE_LABELS,
+  DeliveryType,
+  PAYMENT_TYPE_LABELS,
+  PaymentType,
+} from "@/lib/types";
 import { MOCK_ANIMALS } from "@/lib/mock-data";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { CheckCircle2, Copy, ChevronLeft, AlertCircle, Loader2 } from "lucide-react";
@@ -33,6 +40,7 @@ function SiparisContent() {
     tc_no: "",
     address: "",
     delivery_type: "paket_et" as DeliveryType,
+    payment_type: "sonra" as PaymentType,
     appointment_datetime: "",
     notes: "",
   });
@@ -91,6 +99,7 @@ function SiparisContent() {
         tc_no: form.tc_no.trim() || null,
         address: form.address.trim() || null,
         delivery_type: form.delivery_type,
+        payment_type: form.payment_type,
         appointment_datetime: form.appointment_datetime || null,
         notes: form.notes.trim() || null,
       }),
@@ -300,6 +309,34 @@ function SiparisContent() {
                       value={value}
                       checked={form.delivery_type === value}
                       onChange={() => setForm({ ...form, delivery_type: value })}
+                      className="accent-red-600"
+                    />
+                    <span className="text-sm font-medium text-gray-700">{label}</span>
+                  </label>
+                )
+              )}
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 pt-4">
+            <h3 className="mb-3 text-base font-bold text-gray-900">Ödeme Tercihi</h3>
+            <div className="space-y-2">
+              {(Object.entries(PAYMENT_TYPE_LABELS) as [PaymentType, string][]).map(
+                ([value, label]) => (
+                  <label
+                    key={value}
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-all ${
+                      form.payment_type === value
+                        ? "border-red-500 bg-red-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment_type"
+                      value={value}
+                      checked={form.payment_type === value}
+                      onChange={() => setForm({ ...form, payment_type: value })}
                       className="accent-red-600"
                     />
                     <span className="text-sm font-medium text-gray-700">{label}</span>

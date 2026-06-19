@@ -13,6 +13,7 @@ const DEMO = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 type DashboardData = {
   totalOrders: number;
   totalRevenue: number;
+  outstandingPayments: number;
   beklemede: number;
   kesildi: number;
   teslim: number;
@@ -22,9 +23,14 @@ type DashboardData = {
 
 function getDemoData(): DashboardData {
   const today = new Date().toISOString().split("T")[0];
+  const activeOrders = MOCK_ORDERS.filter((o) => o.status !== "iptal");
   return {
     totalOrders: MOCK_ORDERS.length,
-    totalRevenue: MOCK_ORDERS.filter((o) => o.status !== "iptal").reduce((sum, o) => sum + o.total_price, 0),
+    totalRevenue: activeOrders.reduce((sum, o) => sum + o.total_price, 0),
+    outstandingPayments: activeOrders.reduce(
+      (sum, o) => sum + (o.total_price - (o.paid_amount ?? 0)),
+      0
+    ),
     beklemede: MOCK_ORDERS.filter((o) => o.status === "beklemede").length,
     kesildi: MOCK_ORDERS.filter((o) => o.status === "kesildi").length,
     teslim: MOCK_ORDERS.filter((o) => o.status === "teslim_edildi").length,
@@ -52,7 +58,7 @@ export default function AdminDashboardPage() {
         { data: todayAppt },
       ] = await Promise.all([
         supabase.from("orders").select("*", { count: "exact", head: true }),
-        supabase.from("orders").select("total_price").neq("status", "iptal"),
+        supabase.from("orders").select("total_price, paid_amount").neq("status", "iptal"),
         supabase.from("orders").select("*", { count: "exact", head: true }).eq("status", "beklemede"),
         supabase.from("orders").select("*", { count: "exact", head: true }).eq("status", "kesildi"),
         supabase.from("orders").select("*", { count: "exact", head: true }).eq("status", "teslim_edildi"),
@@ -62,6 +68,10 @@ export default function AdminDashboardPage() {
       setData({
         totalOrders: total ?? 0,
         totalRevenue: (revenueRows ?? []).reduce((sum, r) => sum + (r.total_price ?? 0), 0),
+        outstandingPayments: (revenueRows ?? []).reduce(
+          (sum, r) => sum + ((r.total_price ?? 0) - (r.paid_amount ?? 0)),
+          0
+        ),
         beklemede: bek ?? 0,
         kesildi: kes ?? 0,
         teslim: tes ?? 0,
@@ -78,6 +88,7 @@ export default function AdminDashboardPage() {
 
   const stats = [
     { label: "Toplam Ciro", value: formatCurrency(data.totalRevenue), icon: Wallet, color: "bg-red-50 text-red-700" },
+    { label: "Bekleyen Ödeme", value: formatCurrency(data.outstandingPayments), icon: Wallet, color: "bg-amber-50 text-amber-700" },
     { label: "Toplam Sipariş", value: data.totalOrders, icon: Package, color: "bg-blue-50 text-blue-700" },
     { label: "Beklemede", value: data.beklemede, icon: Clock, color: "bg-yellow-50 text-yellow-700" },
     { label: "Kesildi", value: data.kesildi, icon: CheckCircle2, color: "bg-purple-50 text-purple-700" },
@@ -96,7 +107,7 @@ export default function AdminDashboardPage() {
         <p className="text-sm text-gray-500">Genel durum özeti</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
         {stats.map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="card">
             <div className={`inline-flex rounded-xl p-2.5 ${color}`}><Icon size={20} /></div>
