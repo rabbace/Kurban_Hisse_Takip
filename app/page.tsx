@@ -54,17 +54,22 @@ export default function HomePage() {
   const [loading, setLoading] = useState(!DEMO);
   const [filter, setFilter] = useState<string>(ALL_FILTER);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debugError, setDebugError] = useState<string | null>(null);
 
   useEffect(() => {
     if (DEMO) return;
     async function load() {
       const supabase = createClient();
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("animals")
         .select("*")
         .eq("is_active", true)
         .order("type")
         .order("name");
+      if (error) {
+        console.error("animals fetch error", error);
+        setDebugError(JSON.stringify(error));
+      }
       setAnimals(data ?? []);
       setLoading(false);
     }
@@ -171,6 +176,11 @@ export default function HomePage() {
           <div className="py-20 text-center text-gray-500">
             <p className="text-4xl">🔍</p>
             <p className="mt-3 font-medium">Sonuç bulunamadı</p>
+            {debugError && (
+              <p className="mx-auto mt-4 max-w-xl break-words text-xs text-red-600">
+                DEBUG: {debugError}
+              </p>
+            )}
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
